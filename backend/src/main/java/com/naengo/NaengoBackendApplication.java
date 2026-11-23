@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class NaengoServerApplication {
+public class NaengoBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(NaengoServerApplication.class, args);
+		SpringApplication.run(NaengoBackendApplication.class, args);
 	}
 
 }

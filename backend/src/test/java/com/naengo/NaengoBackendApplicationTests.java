@@ -12,7 +12,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers(disabledWithoutDocker = true)
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
-class NaengoServerApplicationTests {
+class NaengoBackendApplicationTests {
 
 	@Test
 	void contextLoads() {

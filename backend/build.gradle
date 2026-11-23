@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.naengo'
 version = '0.0.1-SNAPSHOT'
-description = 'Naengo Server'
+description = 'Naengo Backend'
 
 java {
 	toolchain {

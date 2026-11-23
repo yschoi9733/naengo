@@ -967,13 +967,14 @@ done
 mkdir -p "$IG/frontend/src" "$IG/frontend/node_modules/react/cjs" "$IG/frontend/node_modules/.vite/vitest" "$IG/frontend/node_modules/.tmp" \
   "$IG/frontend/dist/assets" "$IG/backend/build/classes/java/main" "$IG/backend/.gradle/9.8.2" "$IG/ai/.venv/bin" \
   "$IG/ai/.pytest_cache/v" "$IG/ai/.ruff_cache/0.17.6" "$IG/ai/src/naengo_agent/__pycache__" \
-  "$IG/ai/tests/__pycache__" "$IG/.idea" "$IG/backend/.idea" "$IG/.claude"
+  "$IG/ai/tests/__pycache__" "$IG/.idea" "$IG/backend/.idea" "$IG/ai/.idea" "$IG/frontend/.idea" "$IG/.claude"
 touch "$IG/frontend/node_modules/react/cjs/react.development.js" "$IG/frontend/node_modules/.vite/vitest/results.json" \
   "$IG/frontend/node_modules/.tmp/tsconfig.app.tsbuildinfo" "$IG/frontend/dist/index.html" "$IG/frontend/dist/assets/index-abc123.js" \
   "$IG/backend/build/classes/java/main/App.class" "$IG/backend/.gradle/9.8.2/gc.properties" "$IG/ai/.venv/bin/python" \
   "$IG/ai/.pytest_cache/v/lastfailed" "$IG/ai/.ruff_cache/0.17.6/123" \
   "$IG/ai/src/naengo_agent/__pycache__/main.cpython-313.pyc" "$IG/ai/tests/__pycache__/test_health.cpython-313.pyc" \
-  "$IG/.idea/workspace.xml" "$IG/backend/.idea/workspace.xml" "$IG/.DS_Store" "$IG/frontend/.DS_Store" \
+  "$IG/.idea/workspace.xml" "$IG/backend/.idea/workspace.xml" "$IG/ai/.idea/workspace.xml" \
+  "$IG/frontend/.idea/workspace.xml" "$IG/.DS_Store" "$IG/frontend/.DS_Store" \
   "$IG/.claude/settings.local.json"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 게이트·JetBrains IDE·하네스가 만드는 자리뿐" CLEAN

@@ -1,4 +1,4 @@
-# shadcn/ui가 만든 파일 — 손으로 고치지 않는다(web/CLAUDE.md)
+# shadcn/ui가 만든 파일 — 손으로 고치지 않는다(frontend/CLAUDE.md)
 src/components/ui
 src/hooks
 src/lib/utils.ts
