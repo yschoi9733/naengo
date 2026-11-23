@@ -1,4 +1,4 @@
-# Logs
+# 로그
 logs
 *.log
 npm-debug.log*
@@ -12,7 +12,7 @@ dist
 dist-ssr
 *.local
 
-# Editor directories and files
+# 편집기 설정(추천 확장 목록 extensions.json만 커밋할 수 있다)
 .vscode/*
 !.vscode/extensions.json
 .idea

@@ -1004,19 +1004,21 @@ has "ignored: web/.env.local 줄" "keep web/.env.local"
 has "ignored: application-local 줄" "keep server/src/main/resources/application-local.yml"
 rm -rf "$IG/.env" "$IG/server/.env" "$IG/web/.env.local" "$IG/server/src"
 # 수집한 데이터는 레포에 없다(공개 레포라 커밋하지 않는다) — 사람이 본다.
-mkdir -p "$IG/data/raw"
+mkdir -p "$IG/data/raw" "$IG/agent/data/raw"
 printf '{}\n' > "$IG/data/raw/recipes.json"
+printf '{}\n' > "$IG/agent/data/raw/recipes.json"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 수집한 데이터" KEEP
 has "ignored: data 줄" "keep data/"
-rm -rf "$IG/data"
+has "ignored: agent/data 줄" "keep agent/data/"
+rm -rf "$IG/data" "$IG/agent/data"
 # 사람이 만든 무시 대상은 다른 곳에 없을 수 있다 — remove 가 묻지 않고 지우므로 사람이 본다. 편집기 설정, 로그,
 # 게이트가 만들지 않는 빌드 폴더(dist-ssr)가 그렇다. 그때도 게이트가 만든 자리는 목록에 넣지 않는다.
 mkdir -p "$IG/web/.vscode"
 printf '{}\n' > "$IG/web/.vscode/settings.json"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 편집기 설정" KEEP
-has "ignored: 편집기 설정 줄" "keep web/.vscode/"
+has "ignored: 편집기 설정 줄" "keep web/.vscode/settings.json"
 rm -rf "$IG/web/.vscode"
 mkdir -p "$IG/web/logs" "$IG/web/dist-ssr"
 touch "$IG/web/logs/dev.txt" "$IG/web/npm-debug.log.1" "$IG/web/dist-ssr/entry-server.js"

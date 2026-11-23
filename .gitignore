@@ -4,8 +4,9 @@
 !.env.example
 application-local.*
 
-### 수집한 데이터 (공개 레포라 커밋 금지 — CLAUDE.md 공통 규칙) ###
+### 수집한 데이터 (공개 레포라 커밋 금지 — CLAUDE.md 공통 규칙). agent 명령은 agent/에서 치니 agent/data/도 막는다 ###
 /data/
+/agent/data/
 
 ### server (Gradle) ###
 server/.gradle/
@@ -19,10 +20,11 @@ __pycache__/
 
 ### web 은 web/.gitignore 에 따로 있다 ###
 
-### 편집기 ###
+### 편집기 (추천 확장 목록 extensions.json만 커밋할 수 있다) ###
 .idea/
 *.iml
-.vscode/
+**/.vscode/*
+!**/.vscode/extensions.json
 
 ### macOS ###
 .DS_Store

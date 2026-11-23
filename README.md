@@ -30,19 +30,27 @@
 
 ## 로컬 실행
 
-필요한 것: Java 21, Docker, [uv](https://docs.astral.sh/uv/), Node 22.
+필요한 것: Java 21, Docker, [uv](https://docs.astral.sh/uv/), Node 22. 세 서버는 끝나지 않고 터미널을 잡고 있으니, 각각 새 터미널을 열어 레포 맨 위에서 시작합니다.
+
+서버 (http://localhost:8080)
 
 ```bash
-# 서버 (http://localhost:8080)
 cd server
+cp .env.example .env   # 처음 한 번
 docker compose up -d --wait
 ./gradlew bootRun
+```
 
-# 에이전트 (http://localhost:8000)
+에이전트 (http://localhost:8000)
+
+```bash
 cd agent
 uv run uvicorn naengo_agent.main:app --reload --port 8000
+```
 
-# 웹 (http://localhost:5173)
+웹 (http://localhost:5173, `/api` 요청은 8080으로 넘깁니다)
+
+```bash
 cd web
 npm ci
 npm run dev

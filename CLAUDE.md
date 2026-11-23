@@ -21,11 +21,11 @@
 - 주석·문서는 한국어로 쓰고, 주석은 최소화한다 — 코드를 읽으면 알 수 있는 건 안 쓴다.
 - 예외: `.claude/skills/` 스크립트는 판정 기준과 그 근거(실측·겪은 사고)를 머리말과 판정 옆 주석에 남긴다.
 - 비밀 값(API 키·내부 토큰·로그인 토큰 서명 키·DB 비밀번호)은 환경변수로만 받는다. `.env`·`application-local.*`은 커밋하지 않는다(.gitignore에 있다).
-- 공개 레포다. 수집한 레시피 원문·사진·데이터 덤프는 커밋하지 않고 레포 맨 위 `data/`(.gitignore에 있다)나 DB에만 둔다. 비상업이어도 원문의 저작권은 남는다.
+- 공개 레포다. 수집한 레시피 원문·사진·데이터 덤프는 커밋하지 않고 `agent/data/`(.gitignore에 있다)나 DB에만 둔다. 비상업이어도 원문의 저작권은 남는다.
 
 ## 빌드 / 실행
 
-- 로컬 실행: `server/`에서 `docker compose up -d --wait`(MySQL) → `./gradlew bootRun`(8080), `agent/`에서 `uv run uvicorn naengo_agent.main:app --reload --port 8000`, `web/`에서 `npm ci` → `npm run dev`(http://localhost:5173, `/api` 요청은 8080으로 넘긴다).
+- 로컬 실행: `server/`에서 `cp .env.example .env`(처음 한 번) → `docker compose up -d --wait`(MySQL) → `./gradlew bootRun`(8080), `agent/`에서 `uv run uvicorn naengo_agent.main:app --reload --port 8000`, `web/`에서 `npm ci` → `npm run dev`(http://localhost:5173, `/api` 요청은 8080으로 넘긴다).
 - AI 기본 게이트 — 고친 폴더마다 그 폴더에서 돌린다.
   - `server/`: `./gradlew build`(컴파일+테스트). Docker가 꺼져 있으면 DB 테스트가 SKIPPED로 끝나니 그 사실을 PR에 적고 CI 결과로 넘긴다. 첫 빌드는 의존성을 받느라 몇 분 걸릴 수 있으니 Bash 제한 시간을 넉넉히(10분) 준다.
   - `agent/`: `uv run ruff format --check . && uv run ruff check . && uv run pytest`.
