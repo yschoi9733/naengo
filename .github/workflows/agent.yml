@@ -29,7 +29,8 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10
+      # setup-uv는 v10 같은 큰 판 태그를 두지 않아서 정확한 판의 커밋으로 고정한다
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
         with:
           working-directory: agent
           enable-cache: true
