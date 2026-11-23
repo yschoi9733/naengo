@@ -1042,6 +1042,15 @@ run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 실행 구성이 든 .idea" KEEP
 has "ignored: .idea 줄" "keep .idea/"
 rm -rf "$IG/.idea/runConfigurations"
+# 폴더 바로 아래의 .idea(ai·frontend 를 IDE 로 따로 열었을 때)도 같다 — 남기는 폴더가 있으면 사람이 본다.
+for sub in ai frontend; do
+  mkdir -p "$IG/$sub/.idea/runConfigurations"
+  touch "$IG/$sub/.idea/runConfigurations/dev.xml"
+  run "$R" "$S/ignored-check.sh" "$IG"
+  check "ignored: 실행 구성이 든 $sub/.idea" KEEP
+  has "ignored: $sub/.idea 줄" "keep $sub/.idea/"
+  rm -rf "$IG/$sub/.idea/runConfigurations"
+done
 # Shelve Changes 로 치워 둔 변경은 .idea/shelf/ 에만 있다 — 사람이 본다.
 mkdir -p "$IG/.idea/shelf"
 touch "$IG/.idea/shelf/WIP.patch"
