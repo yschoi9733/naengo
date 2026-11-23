@@ -5,10 +5,10 @@ services:
     image: mysql:8.4
     environment:
       MYSQL_DATABASE: naengo
-      # 서버와 같은 server/.env 값을 쓴다. MySQL은 이 값을 데이터 볼륨을 처음 만들 때만 적용하므로,
-      # 바꾼 뒤에는 docker compose down -v로 볼륨을 지우고 다시 띄운다
+      # 서버와 같은 server/.env 값을 쓴다(서버도 비밀번호 기본값이 없어서, 여기서도 없으면 바로 멈춘다).
+      # MySQL은 이 값을 데이터 볼륨을 처음 만들 때만 적용하므로, 바꾼 뒤에는 docker compose down -v로 볼륨을 지우고 다시 띄운다
       MYSQL_USER: ${DB_USERNAME:-naengo}
-      MYSQL_PASSWORD: ${DB_PASSWORD:-naengo}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?server/.env가 없다 — cp -n .env.example .env}
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "127.0.0.1:3306:3306"   # 내 컴퓨터에서만 접속

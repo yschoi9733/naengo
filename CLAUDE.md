@@ -25,7 +25,7 @@
 
 ## 빌드 / 실행
 
-- 로컬 실행: `server/`에서 `cp .env.example .env`(처음 한 번) → `docker compose up -d --wait`(MySQL) → `./gradlew bootRun`(8080), `agent/`에서 `uv run uvicorn naengo_agent.main:app --reload --port 8000`, `web/`에서 `npm ci` → `npm run dev`(http://localhost:5173, `/api` 요청은 8080으로 넘긴다).
+- 로컬 실행: `server/`에서 `cp -n .env.example .env`(처음 한 번) → `docker compose up -d --wait`(MySQL) → `./gradlew bootRun`(8080), `agent/`에서 `uv run uvicorn naengo_agent.main:app --reload --port 8000`, `web/`에서 `npm ci` → `npm run dev`(http://localhost:5173, `/api` 요청은 8080으로 넘긴다).
 - AI 기본 게이트 — 고친 폴더마다 그 폴더에서 돌린다.
   - `server/`: `./gradlew build`(컴파일+테스트). Docker가 꺼져 있으면 DB 테스트가 SKIPPED로 끝나니 그 사실을 PR에 적고 CI 결과로 넘긴다. 첫 빌드는 의존성을 받느라 몇 분 걸릴 수 있으니 Bash 제한 시간을 넉넉히(10분) 준다.
   - `agent/`: `uv run ruff format --check . && uv run ruff check . && uv run pytest`.

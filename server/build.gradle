@@ -46,7 +46,8 @@ tasks.named('bootRun') {
 	systemProperty 'spring.config.import', 'optional:file:.env[.properties]'
 }
 
-// 개인 설정 파일(application-local.*)은 bootRun·테스트에서는 읽히고, 배포할 jar에만 들어가지 않게 한다
+// 로컬 값은 위 server/.env로만 받는다. application-local.* 같은 개인 설정 파일은 쓰지 않지만(켜는 프로필도 없다),
+// 실수로 src/main/resources에 둬도 배포할 jar에는 들어가지 않게 뺀다
 tasks.named('bootJar') {
 	exclude '**/application-local.*'
 }

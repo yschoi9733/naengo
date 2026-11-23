@@ -44,7 +44,7 @@
 #     스스로도 쓰는지 재 보지 않아 이 목록에 넣지 않았다 — 넣으면 열기만 해도 정리가 매번 멈출 수 있다
 #   - .DS_Store 파일(링크·디렉터리 제외 — orphan-check.sh 와 같다)
 #   - 빈 디렉터리(하네스가 워크트리 안에 빈 .claude/worktrees/ 를 만든다 — 실측)
-# 그 밖의 무시 대상은 늘 KEEP 으로 나온다 — 비밀 값 .env·web/.env.local, 수집한 데이터 agent/data/, 편집기 설정 .vscode/,
+# 그 밖의 무시 대상은 늘 KEEP 으로 나온다 — 비밀 값 .env·web/.env.local, 수집한 데이터 agent/data/·data/, 편집기 설정 .vscode/ 안의 파일(extensions.json 밖),
 # 로그 web/logs/·*.log, web/dist-ssr/ 같은 것이다. 게이트가 늘 만든다고 실측한 자리만 이 목록에 더한다(.gitignore 에 걸려 사람이 둔 스크립트·메모가 추적
 # 밖에 숨을 수 있어서다 — 이전 리뷰에서 나온 기준이다).
 # 이름만으로 넘기지 않는다. 같은 이름이 다른 자리에 있으면 사람이 만든 것일 수 있다 — 엉뚱한 자리의 node_modules·
