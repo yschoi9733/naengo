@@ -4,7 +4,7 @@
 
 ## 프로젝트
 
-- **Naengo AI** — 냉고의 AI 서버. 밖에 열지 않고 Spring에서만 호출을 받는 내부 서버로, 채팅 답변(RAG — LangGraph 에이전트), 레시피 검색 색인, 레시피 수집, 평가, 나중에 붙일 재료 인식을 맡는다.
+- **Naengo AI** — 냉고의 AI 서버. 밖에 열지 않고 Spring에서만 호출을 받는 내부 서버로, 채팅 답변(RAG — LangGraph 에이전트), 레시피 검색 색인, 레시피 수집, 평가, 나중에 붙일 재료 인식을 맡는다. 파이썬 패키지(import) 이름은 `naengo_ai`다.
 - Python 3.13 / uv / FastAPI. LangGraph·Gemini API·Postgres(pgvector)는 처음 쓰는 이슈에서 더한다. 명령은 모두 `ai/`에서 `uv run ...`으로 친다.
 - 코드는 `src/naengo_ai/` 아래에 기능별 패키지로 둔다 — `api`(Spring이 부르는 내부 HTTP) · `graph`(LangGraph 흐름) · `search`(색인·검색) · `collect`(수집) · `eval`(평가). 처음 쓰는 이슈에서 만든다.
 
