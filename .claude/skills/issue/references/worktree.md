@@ -500,8 +500,8 @@ bash "<사본>/scripts/inside.sh" "<대상 path>"
 ### 2. 워크트리 안에서 도는 작업 멈추기
 
 지운 뒤에도 워크트리 안에서 도는 프로세스가 있으면 그 경로에 파일을 다시 써서 디렉터리를 되살린다 — 이 세션이
-띄운 Gradle 빌드면 `server/build/`·`server/.gradle/`, `uv run` 이면 `agent/.venv/`·캐시, `npm ci` 면
-`web/node_modules/`, 웹 개발 서버·테스트면 `web/node_modules/.vite/`, 웹 빌드면 `web/dist/`, JetBrains IDE(IntelliJ
+띄운 Gradle 빌드면 `backend/build/`·`backend/.gradle/`, `uv run` 이면 `ai/.venv/`·캐시, `npm ci` 면
+`frontend/node_modules/`, 웹 개발 서버·테스트면 `frontend/node_modules/.vite/`, 웹 빌드면 `frontend/dist/`, JetBrains IDE(IntelliJ
 IDEA·PyCharm·WebStorm)면 `.idea/` 다. **이 세션이 그 경로 안에서 띄운 백그라운드 작업**(`run_in_background` 로 띄운
 `./gradlew` 빌드·`bootRun`, `uv run pytest`·`uvicorn`, `npm ci`·`npm test`·`npm run build`·개발 서버 `npm run dev`, 그
 경로를 보는 Monitor)이 아직 돌면 끝나기를 기다리거나 `TaskStop` 으로 멈춘다. 서버(`bootRun`·`uvicorn`·`npm run dev`)는
@@ -546,7 +546,7 @@ pgrep -fl '\.app/Contents/MacOS/(webstorm|idea|pycharm)( |$)'
 
 **먼저 `remove` 가 함께 지울 무시 대상 파일을 본다.** `remove` 는 추적 안 된 파일이 있으면 거부하지만
 `.gitignore` 대상은 묻지 않고 디렉터리째 지운다. 이 레포의 무시 대상에는 비밀 값 파일(`.env`·`application-local.*`),
-수집한 데이터(`agent/data/`·레포 맨 위 `/data/`), 편집기 설정(`.vscode/`)처럼 다른 곳에 없을 수 있는 것이 들어 있다:
+수집한 데이터(`ai/data/`·레포 맨 위 `/data/`), 편집기 설정(`.vscode/`)처럼 다른 곳에 없을 수 있는 것이 들어 있다:
 
 ```
 bash "<사본>/scripts/ignored-check.sh" "<대상 path>"
@@ -556,8 +556,8 @@ bash "<사본>/scripts/ignored-check.sh" "<대상 path>"
 세션이나 사람 터미널에서 도는 프로세스가 그 틈에 무시 대상 파일을 쓰는 것까지는 막지 못한다(2번이 그런
 프로세스를 볼 수 없는 것과 같은 한계다).
 
-- `CLEAN` — 무시 대상이 없거나 다시 만들 수 있는 것(게이트가 만드는 `web/node_modules`·`web/dist`·`server/build`·
-  `agent/.venv` 등과 JetBrains IDE 산출물, 하네스의 `.claude/settings.local.json`, SKILL.md 4단계의 셈 기록 파일, 빈 디렉터리 등 — 스크립트 머리말)뿐이다. 아래
+- `CLEAN` — 무시 대상이 없거나 다시 만들 수 있는 것(게이트가 만드는 `frontend/node_modules`·`frontend/dist`·`backend/build`·
+  `ai/.venv` 등과 JetBrains IDE 산출물, 하네스의 `.claude/settings.local.json`, SKILL.md 4단계의 셈 기록 파일, 빈 디렉터리 등 — 스크립트 머리말)뿐이다. 아래
   `remove` 로 간다.
 - `KEEP` — **이 절차는 지우지 않는다.** `keep` 줄을 보여 주고, 사람이 그 파일을 옮기거나 직접 지운 뒤 다시
   부르게 한다. "그냥 지워라"는 답이어도 같다 — 디렉터리 줄(`tools/node_modules/`)은 그 안을 통째로 가리켜서 답한 뒤에

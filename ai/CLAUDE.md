@@ -1,11 +1,11 @@
-# agent/CLAUDE.md
+# ai/CLAUDE.md
 
-레포 맨 위 CLAUDE.md(서버 사이 규칙·게이트·Git·라벨)를 먼저 따른다. 여기는 `agent/`에만 해당하는 규칙이다.
+레포 맨 위 CLAUDE.md(서버 사이 규칙·게이트·Git·라벨)를 먼저 따른다. 여기는 `ai/`에만 해당하는 규칙이다.
 
 ## 프로젝트
 
-- **Naengo Agent** — 냉고의 에이전트 서버. Spring 서버만 부르는 내부 서버로, 채팅 답변(RAG), 레시피 검색 색인, 레시피 수집, 평가를 맡는다.
-- Python 3.13 / uv / FastAPI. LangGraph·Gemini API·Postgres(pgvector)는 처음 쓰는 이슈에서 더한다. 명령은 모두 `agent/`에서 `uv run ...`으로 친다.
+- **Naengo AI** — 냉고의 AI 서버. Spring 서버만 부르는 내부 서버로, 채팅 답변(RAG — LangGraph 에이전트), 레시피 검색 색인, 레시피 수집, 평가를 맡는다. 파이썬 패키지 이름은 `naengo_agent`다.
+- Python 3.13 / uv / FastAPI. LangGraph·Gemini API·Postgres(pgvector)는 처음 쓰는 이슈에서 더한다. 명령은 모두 `ai/`에서 `uv run ...`으로 친다.
 - 코드는 `src/naengo_agent/` 아래에 기능별 패키지로 둔다 — `api`(Spring이 부르는 내부 HTTP) · `graph`(LangGraph 흐름) · `search`(색인·검색) · `collect`(수집) · `eval`(평가). 처음 쓰는 이슈에서 만든다.
 
 ## 코딩 규칙
@@ -16,5 +16,5 @@
 - 주고받는 데이터는 Pydantic 모델로 쓰고, 함수에는 타입 힌트를 단다.
 - 테스트는 pytest로 쓰고, LLM·임베딩 호출은 가짜로 바꿔 네트워크와 비용 없이 돌게 한다. 실제 모델로 재는 건 평가(`eval`)의 몫이다.
 - 프롬프트·모델·검색 방식을 바꾸는 PR에는 평가를 돌린 전후 점수를 적는다(평가 도구를 만든 뒤부터).
-- 수집기는 robots.txt를 지키고 요청 사이에 간격을 둔다. 수집 결과는 `agent/data/`(.gitignore에 있다)나 DB에만 둔다.
+- 수집기는 robots.txt를 지키고 요청 사이에 간격을 둔다. 수집 결과는 `ai/data/`(.gitignore에 있다)나 DB에만 둔다.
 - 서식과 린트는 ruff(`pyproject.toml`)가 정한다. 고친 뒤 `uv run ruff format .`으로 맞춘다.

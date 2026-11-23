@@ -945,13 +945,13 @@ rm -rf "$C/fix+67-twenty"
 
 # ---------------------------------------------------------------- ignored-check.sh
 # remove 가 묻지 않고 지우는 무시 대상 중 다시 만들 수 없는 것만 KEEP 으로 낸다. 무시 패턴은 이 레포 .gitignore 둘(맨 위와
-# web/)을 그대로 쓰고 시험용 줄(-*/)만 덧붙인다 — 손으로 옮겨 적으면 실제 파일이 바뀌어도 테스트가 모른다.
+# frontend/)을 그대로 쓰고 시험용 줄(-*/)만 덧붙인다 — 손으로 옮겨 적으면 실제 파일이 바뀌어도 테스트가 모른다.
 IG="$CC/fix+61-ign"
 add "$IG" fix/61-ign
 cat "$HERE/../../../../.gitignore" > "$IG/.gitignore" || setup_fail "레포 .gitignore 복사"
 printf '%s\n' '-*/' >> "$IG/.gitignore"
-mkdir -p "$IG/web" || setup_fail "ignored web 폴더"
-cat "$HERE/../../../../web/.gitignore" > "$IG/web/.gitignore" || setup_fail "레포 web/.gitignore 복사"
+mkdir -p "$IG/frontend" || setup_fail "ignored frontend 폴더"
+cat "$HERE/../../../../frontend/.gitignore" > "$IG/frontend/.gitignore" || setup_fail "레포 frontend/.gitignore 복사"
 # 이 스킬은 레포 .gitignore 가 이 셋을 무시한다고 전제한다 — 5단계 PR 본문 파일과 제거 절차 스냅숏을 두는 scratchpad/,
 # 워크트리 컨테이너 .claude/worktrees/, 하네스 허용 설정. scratchpad/ 가 빠지면 본 체크아웃 status 가 더러워지고, 그
 # 안의 파일이 추적 밖 파일이 되어 아래 scratchpad 검사들도 CLEAN 으로 빠진다(SKILL.md 5단계).
@@ -960,80 +960,80 @@ for want in scratchpad/x .claude/worktrees/x .claude/settings.local.json; do
     bad "ignored: 레포 .gitignore 가 스킬이 쓰는 자리를 무시한다" "$want 가 무시되지 않는다 — 레포 .gitignore 에 줄을 더한다"
   fi
 done
-# 게이트(server 의 ./gradlew build, agent 의 uv run ruff·pytest, web 의 npm ci·npm run build)·JetBrains IDE·하네스가
-# 만드는 자리는 다시 만들 수 있다 — web/node_modules·web/dist, server/build·server/.gradle, agent/.venv·
-# agent/.pytest_cache·agent/.ruff_cache·agent 아래의 __pycache__, 최상위와 폴더 바로 아래의 .idea.
+# 게이트(backend 의 ./gradlew build, ai 의 uv run ruff·pytest, frontend 의 npm ci·npm run build)·JetBrains IDE·하네스가
+# 만드는 자리는 다시 만들 수 있다 — frontend/node_modules·frontend/dist, backend/build·backend/.gradle, ai/.venv·
+# ai/.pytest_cache·ai/.ruff_cache·ai 아래의 __pycache__, 최상위와 폴더 바로 아래의 .idea.
 # node_modules 안의 개발 서버·Vitest 캐시(.vite)와 타입 검사 기록(.tmp)도 그 안이라 함께 넘어간다.
-mkdir -p "$IG/web/src" "$IG/web/node_modules/react/cjs" "$IG/web/node_modules/.vite/vitest" "$IG/web/node_modules/.tmp" \
-  "$IG/web/dist/assets" "$IG/server/build/classes/java/main" "$IG/server/.gradle/9.8.2" "$IG/agent/.venv/bin" \
-  "$IG/agent/.pytest_cache/v" "$IG/agent/.ruff_cache/0.17.6" "$IG/agent/src/naengo_agent/__pycache__" \
-  "$IG/agent/tests/__pycache__" "$IG/.idea" "$IG/server/.idea" "$IG/.claude"
-touch "$IG/web/node_modules/react/cjs/react.development.js" "$IG/web/node_modules/.vite/vitest/results.json" \
-  "$IG/web/node_modules/.tmp/tsconfig.app.tsbuildinfo" "$IG/web/dist/index.html" "$IG/web/dist/assets/index-abc123.js" \
-  "$IG/server/build/classes/java/main/App.class" "$IG/server/.gradle/9.8.2/gc.properties" "$IG/agent/.venv/bin/python" \
-  "$IG/agent/.pytest_cache/v/lastfailed" "$IG/agent/.ruff_cache/0.17.6/123" \
-  "$IG/agent/src/naengo_agent/__pycache__/main.cpython-313.pyc" "$IG/agent/tests/__pycache__/test_health.cpython-313.pyc" \
-  "$IG/.idea/workspace.xml" "$IG/server/.idea/workspace.xml" "$IG/.DS_Store" "$IG/web/.DS_Store" \
+mkdir -p "$IG/frontend/src" "$IG/frontend/node_modules/react/cjs" "$IG/frontend/node_modules/.vite/vitest" "$IG/frontend/node_modules/.tmp" \
+  "$IG/frontend/dist/assets" "$IG/backend/build/classes/java/main" "$IG/backend/.gradle/9.8.2" "$IG/ai/.venv/bin" \
+  "$IG/ai/.pytest_cache/v" "$IG/ai/.ruff_cache/0.17.6" "$IG/ai/src/naengo_agent/__pycache__" \
+  "$IG/ai/tests/__pycache__" "$IG/.idea" "$IG/backend/.idea" "$IG/.claude"
+touch "$IG/frontend/node_modules/react/cjs/react.development.js" "$IG/frontend/node_modules/.vite/vitest/results.json" \
+  "$IG/frontend/node_modules/.tmp/tsconfig.app.tsbuildinfo" "$IG/frontend/dist/index.html" "$IG/frontend/dist/assets/index-abc123.js" \
+  "$IG/backend/build/classes/java/main/App.class" "$IG/backend/.gradle/9.8.2/gc.properties" "$IG/ai/.venv/bin/python" \
+  "$IG/ai/.pytest_cache/v/lastfailed" "$IG/ai/.ruff_cache/0.17.6/123" \
+  "$IG/ai/src/naengo_agent/__pycache__/main.cpython-313.pyc" "$IG/ai/tests/__pycache__/test_health.cpython-313.pyc" \
+  "$IG/.idea/workspace.xml" "$IG/backend/.idea/workspace.xml" "$IG/.DS_Store" "$IG/frontend/.DS_Store" \
   "$IG/.claude/settings.local.json"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 게이트·JetBrains IDE·하네스가 만드는 자리뿐" CLEAN
 # 이름이 맞아도 디렉터리가 아니거나 링크면 사람이 본다.
-mv "$IG/web/dist" "$T/ign-dist" || setup_fail "ignored dist 옮기기"
-printf 'x\n' > "$IG/web/dist"
+mv "$IG/frontend/dist" "$T/ign-dist" || setup_fail "ignored dist 옮기기"
+printf 'x\n' > "$IG/frontend/dist"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 파일인 dist" KEEP
-has "ignored: 파일인 dist 줄" "keep web/dist"
-rm -f "$IG/web/dist"
-ln -s "$T/ign-dist" "$IG/web/dist" || setup_fail "ignored dist 링크"
+has "ignored: 파일인 dist 줄" "keep frontend/dist"
+rm -f "$IG/frontend/dist"
+ln -s "$T/ign-dist" "$IG/frontend/dist" || setup_fail "ignored dist 링크"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 링크인 dist" KEEP
-has "ignored: 링크인 dist 줄" "keep web/dist"
-rm -f "$IG/web/dist"
-mv "$T/ign-dist" "$IG/web/dist" || setup_fail "ignored dist 되돌리기"
+has "ignored: 링크인 dist 줄" "keep frontend/dist"
+rm -f "$IG/frontend/dist"
+mv "$T/ign-dist" "$IG/frontend/dist" || setup_fail "ignored dist 되돌리기"
 # 비밀 값 파일은 다른 곳에 없을 수 있다 — 사람이 본다.
 printf 'DB_PASSWORD=x\n' > "$IG/.env"
-printf 'DB_PASSWORD=y\n' > "$IG/server/.env"
-printf 'API_PROXY_TARGET=y\n' > "$IG/web/.env.local"
-mkdir -p "$IG/server/src/main/resources"
-printf 'x: y\n' > "$IG/server/src/main/resources/application-local.yml"
+printf 'DB_PASSWORD=y\n' > "$IG/backend/.env"
+printf 'API_PROXY_TARGET=y\n' > "$IG/frontend/.env.local"
+mkdir -p "$IG/backend/src/main/resources"
+printf 'x: y\n' > "$IG/backend/src/main/resources/application-local.yml"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 비밀 값 파일" KEEP
 has "ignored: .env 줄" "keep .env"
-has "ignored: server/.env 줄" "keep server/.env"
-has "ignored: web/.env.local 줄" "keep web/.env.local"
-has "ignored: application-local 줄" "keep server/src/main/resources/application-local.yml"
-rm -rf "$IG/.env" "$IG/server/.env" "$IG/web/.env.local" "$IG/server/src"
+has "ignored: backend/.env 줄" "keep backend/.env"
+has "ignored: frontend/.env.local 줄" "keep frontend/.env.local"
+has "ignored: application-local 줄" "keep backend/src/main/resources/application-local.yml"
+rm -rf "$IG/.env" "$IG/backend/.env" "$IG/frontend/.env.local" "$IG/backend/src"
 # 수집한 데이터는 레포에 없다(공개 레포라 커밋하지 않는다) — 사람이 본다.
-mkdir -p "$IG/data/raw" "$IG/agent/data/raw"
+mkdir -p "$IG/data/raw" "$IG/ai/data/raw"
 printf '{}\n' > "$IG/data/raw/recipes.json"
-printf '{}\n' > "$IG/agent/data/raw/recipes.json"
+printf '{}\n' > "$IG/ai/data/raw/recipes.json"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 수집한 데이터" KEEP
 has "ignored: data 줄" "keep data/"
-has "ignored: agent/data 줄" "keep agent/data/"
-rm -rf "$IG/data" "$IG/agent/data"
+has "ignored: ai/data 줄" "keep ai/data/"
+rm -rf "$IG/data" "$IG/ai/data"
 # 사람이 만든 무시 대상은 다른 곳에 없을 수 있다 — remove 가 묻지 않고 지우므로 사람이 본다. 편집기 설정, 로그,
 # 게이트가 만들지 않는 빌드 폴더(dist-ssr)가 그렇다. 그때도 게이트가 만든 자리는 목록에 넣지 않는다.
-mkdir -p "$IG/web/.vscode"
-printf '{}\n' > "$IG/web/.vscode/settings.json"
+mkdir -p "$IG/frontend/.vscode"
+printf '{}\n' > "$IG/frontend/.vscode/settings.json"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 편집기 설정" KEEP
-has "ignored: 편집기 설정 줄" "keep web/.vscode/settings.json"
-rm -rf "$IG/web/.vscode"
-mkdir -p "$IG/web/logs" "$IG/web/dist-ssr"
-touch "$IG/web/logs/dev.txt" "$IG/web/npm-debug.log.1" "$IG/web/dist-ssr/entry-server.js"
+has "ignored: 편집기 설정 줄" "keep frontend/.vscode/settings.json"
+rm -rf "$IG/frontend/.vscode"
+mkdir -p "$IG/frontend/logs" "$IG/frontend/dist-ssr"
+touch "$IG/frontend/logs/dev.txt" "$IG/frontend/npm-debug.log.1" "$IG/frontend/dist-ssr/entry-server.js"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 로그·dist-ssr" KEEP
-has "ignored: 로그 폴더 줄" "keep web/logs/"
-has "ignored: 로그 파일 줄" "keep web/npm-debug.log.1"
-has "ignored: dist-ssr 줄" "keep web/dist-ssr/"
-hasnt "ignored: node_modules 는 목록에 없다" "keep web/node_modules/"
-hasnt "ignored: dist 는 목록에 없다" "keep web/dist/"
-hasnt "ignored: build 는 목록에 없다" "keep server/build/"
-hasnt "ignored: .venv 는 목록에 없다" "keep agent/.venv/"
+has "ignored: 로그 폴더 줄" "keep frontend/logs/"
+has "ignored: 로그 파일 줄" "keep frontend/npm-debug.log.1"
+has "ignored: dist-ssr 줄" "keep frontend/dist-ssr/"
+hasnt "ignored: node_modules 는 목록에 없다" "keep frontend/node_modules/"
+hasnt "ignored: dist 는 목록에 없다" "keep frontend/dist/"
+hasnt "ignored: build 는 목록에 없다" "keep backend/build/"
+hasnt "ignored: .venv 는 목록에 없다" "keep ai/.venv/"
 hasnt "ignored: __pycache__ 는 목록에 없다" "__pycache__"
 hasnt "ignored: .idea 는 목록에 없다" "keep .idea/"
-rm -rf "$IG/web/logs" "$IG/web/npm-debug.log.1" "$IG/web/dist-ssr"
+rm -rf "$IG/frontend/logs" "$IG/frontend/npm-debug.log.1" "$IG/frontend/dist-ssr"
 # .idea 안에 팀이 남기려고 만드는 폴더(프로젝트 파일로 저장한 실행 구성 등)가 있으면 사람이 본다.
 mkdir -p "$IG/.idea/runConfigurations"
 touch "$IG/.idea/runConfigurations/dev.xml"
@@ -1087,18 +1087,18 @@ if [ "$(printf '%s\n' "$OUT" | LC_ALL=C grep -c '^keep ')" -eq 20 ]; then ok; el
 rm -rf "$IG/scratchpad"
 # 이름만으로 넘기지 않는다 — node_modules·dist·.idea·.venv·__pycache__ 는 어느 깊이든 무시된다. 게이트·IDE 가 만드는
 # 자리가 아니면 사람이 본다.
-mkdir -p "$IG/web/tools/node_modules/x" "$IG/web/src/pages/dist" "$IG/tools/.idea" "$IG/tools/.venv/bin" \
+mkdir -p "$IG/frontend/tools/node_modules/x" "$IG/frontend/src/pages/dist" "$IG/tools/.idea" "$IG/tools/.venv/bin" \
   "$IG/tools/__pycache__"
-touch "$IG/web/tools/node_modules/x/index.js" "$IG/web/src/pages/dist/out.js" "$IG/tools/.idea/workspace.xml" \
+touch "$IG/frontend/tools/node_modules/x/index.js" "$IG/frontend/src/pages/dist/out.js" "$IG/tools/.idea/workspace.xml" \
   "$IG/tools/.venv/bin/python" "$IG/tools/__pycache__/x.cpython-313.pyc"
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 엉뚱한 자리의 node_modules·dist·.idea·.venv·__pycache__" KEEP
-has "ignored: 깊은 node_modules 줄" "keep web/tools/node_modules/"
-has "ignored: 깊은 dist 줄" "keep web/src/pages/dist/"
+has "ignored: 깊은 node_modules 줄" "keep frontend/tools/node_modules/"
+has "ignored: 깊은 dist 줄" "keep frontend/src/pages/dist/"
 has "ignored: 깊은 .idea 줄" "keep tools/.idea/"
 has "ignored: 엉뚱한 .venv 줄" "keep tools/.venv/"
-has "ignored: agent 밖의 __pycache__ 줄" "keep tools/__pycache__/"
-rm -rf "$IG/tools" "$IG/web/tools" "$IG/web/src/pages"
+has "ignored: ai 밖의 __pycache__ 줄" "keep tools/__pycache__/"
+rm -rf "$IG/tools" "$IG/frontend/tools" "$IG/frontend/src/pages"
 # scratchpad/ 에 남은 것은 5단계가 본문 파일을 지우고 간 뒤의 것이라 사람이 본다(이전 리뷰에서 재현).
 mkdir -p "$IG/scratchpad"
 touch "$IG/scratchpad/notes.md"
@@ -1170,17 +1170,17 @@ run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 무시된 링크는 KEEP" KEEP
 rm -f "$IG/.idea-link"
 # 스크립트가 그 워크트리 안에서 git 을 부르므로 cwd 가 레포 밖이어도 같다.
-mkdir -p "$IG/web/logs"
-touch "$IG/web/logs/dev.txt"
+mkdir -p "$IG/frontend/logs"
+touch "$IG/frontend/logs/dev.txt"
 run "$T" "$S/ignored-check.sh" "$IG"
 check "ignored: cwd 가 레포 밖이어도 판정" KEEP
-has "ignored: 로그 폴더 줄(레포 밖 cwd)" "keep web/logs/"
+has "ignored: 로그 폴더 줄(레포 밖 cwd)" "keep frontend/logs/"
 # 상대경로 인자는 작업 디렉터리 기준으로 푼다 — CDPATH 가 걸리면 cd 가 그쪽 같은 이름으로 가고 그 자리를 stdout 에 찍어
 # 첫 줄이 판정 키워드가 아니게 됐다(skill-repo.sh 와 같은 이유).
 mkdir -p "$T/ign-cdpath/fix+61-ign"
 run "$C" -c 'CDPATH="$1" bash "$2" fix+61-ign' _ "$T/ign-cdpath" "$S/ignored-check.sh"
 check "ignored: CDPATH 가 있어도 작업 디렉터리 기준" KEEP
-has "ignored: CDPATH 쪽이 아니라 그 워크트리를 판정" "keep web/logs/"
+has "ignored: CDPATH 쪽이 아니라 그 워크트리를 판정" "keep frontend/logs/"
 rm -rf "$T/ign-cdpath"
 # - 로 시작하는 상대경로도 판정한다 — cd 가 옵션(-66…)이나 OLDPWD(- 하나)로 읽어 들어가지 못했다.
 add "$CC/-66-dash" fix/66-dash
@@ -1192,7 +1192,7 @@ check "ignored: - 하나인 상대경로" CLEAN
 g worktree remove -- "$CC/-66-dash"
 g worktree remove -- "$CC/-"
 g branch -D fix/66-dash fix/68-lone-dash
-for ((n = 0; n < 25; n++)); do : > "$IG/web/k$n.log"; done
+for ((n = 0; n < 25; n++)); do : > "$IG/frontend/k$n.log"; done
 run "$R" "$S/ignored-check.sh" "$IG"
 check "ignored: 많아도 KEEP" KEEP
 has "ignored: 20+ 표시" "keep-more 20+"

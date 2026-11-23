@@ -1,15 +1,15 @@
-# 로컬 개발용 MySQL. server/에서 `docker compose up -d --wait`로 띄운다(접속 준비가 끝날 때까지 기다린다).
+# 로컬 개발용 MySQL. backend/에서 `docker compose up -d --wait`로 띄운다(접속 준비가 끝날 때까지 기다린다).
 # 계정·비밀번호는 내 컴퓨터에서만 쓰는 값이다.
 services:
   mysql:
     image: mysql:8.4
     environment:
       MYSQL_DATABASE: naengo
-      # 서버와 같은 server/.env 값을 쓴다(서버도 비밀번호 기본값이 없어서, 여기서도 없으면 바로 멈춘다 — down 같은 다른
+      # 서버와 같은 backend/.env 값을 쓴다(서버도 비밀번호 기본값이 없어서, 여기서도 없으면 바로 멈춘다 — down 같은 다른
       # compose 명령도 같다). MySQL은 이 값을 데이터 볼륨을 처음 만들 때만 적용하므로, 바꾼 뒤에는 docker compose down -v로
       # 볼륨을 지우고 다시 띄운다
       MYSQL_USER: ${DB_USERNAME:-naengo}
-      MYSQL_PASSWORD: ${DB_PASSWORD:?server/.env에 DB_PASSWORD가 없다 — .env가 없으면 .env.example을 복사한다}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?backend/.env에 DB_PASSWORD가 없다 — .env가 없으면 .env.example을 복사한다}
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "127.0.0.1:3306:3306"   # 내 컴퓨터에서만 접속

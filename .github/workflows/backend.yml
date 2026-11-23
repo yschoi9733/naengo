@@ -1,16 +1,16 @@
-name: server
+name: backend
 
 # 아래 두 paths 목록은 같게 둔다(PR과 main push가 같은 파일을 보게)
 on:
   pull_request:
     paths:
-      - server/**
-      - .github/workflows/server.yml
+      - backend/**
+      - .github/workflows/backend.yml
   push:
     branches: [main]
     paths:
-      - server/**
-      - .github/workflows/server.yml
+      - backend/**
+      - .github/workflows/backend.yml
 
 permissions:
   contents: read
@@ -22,7 +22,7 @@ concurrency:
 
 defaults:
   run:
-    working-directory: server
+    working-directory: backend
 
 jobs:
   build:

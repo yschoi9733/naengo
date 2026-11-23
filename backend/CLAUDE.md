@@ -1,15 +1,15 @@
-# server/CLAUDE.md
+# backend/CLAUDE.md
 
-레포 맨 위 CLAUDE.md(서버 사이 규칙·게이트·Git·라벨)를 먼저 따른다. 여기는 `server/`에만 해당하는 규칙이다.
+레포 맨 위 CLAUDE.md(서버 사이 규칙·게이트·Git·라벨)를 먼저 따른다. 여기는 `backend/`에만 해당하는 규칙이다.
 
 ## 프로젝트
 
-- **Naengo Server** — 냉고의 본 서버. 웹이 부르는 API를 모두 맡고, AI 기능은 Python 에이전트 서버에 내부 HTTP로 넘긴다.
-- Spring Boot 4.1.2 / Java 21 / Gradle 래퍼 / MySQL 8.4. 기본 패키지 `com.naengo`. 명령은 모두 `server/`에서 친다.
+- **Naengo Backend** — 냉고의 본 서버. 웹이 부르는 API를 모두 맡고, AI 기능은 Python AI 서버(`ai/`)에 내부 HTTP로 넘긴다.
+- Spring Boot 4.1.2 / Java 21 / Gradle 래퍼 / MySQL 8.4. 기본 패키지 `com.naengo`. 명령은 모두 `backend/`에서 친다.
 
 ## 아키텍처: 모듈러 모놀리스
 
-- 모듈 = 패키지. 정해 둔 모듈은 `member`(사용자·프로필·로그인) · `fridge`(냉장고 재고) · `ingredient`(재료 표준 사전·알레르기 코드) · `recipe`(레시피 원본·좋아요·스크랩) · `chat`(채팅방·메시지, 에이전트 호출과 답변 중계) · `common`(오류 응답·보안처럼 모듈이 함께 쓰는 것)이다. 모듈을 더하면 `docs/architecture.md`의 표 주인도 함께 고친다.
+- 모듈 = 패키지. 정해 둔 모듈은 `member`(사용자·프로필·로그인) · `fridge`(냉장고 재고) · `ingredient`(재료 표준 사전·알레르기 코드) · `recipe`(레시피 원본·좋아요·스크랩) · `chat`(채팅방·메시지, AI 서버 호출과 답변 중계) · `common`(오류 응답·보안처럼 모듈이 함께 쓰는 것)이다. 모듈이나 DB 테이블을 더하면 `docs/architecture.md`의 테이블 주인도 함께 고친다.
 - 모듈 안은 Controller → Service → Repository, 업무 규칙은 엔티티(도메인 객체)에 둔다.
 - 웹이 부르는 API 주소는 모두 `/api/v1/...`로 시작한다.
 - 다른 모듈의 기능은 그 모듈이 공개한 Service·인터페이스로만 부른다. 다른 모듈의 Repository는 직접 부르지 않는다.
@@ -23,5 +23,5 @@
 - DB 스키마는 Flyway(`src/main/resources/db/migration/V<번호>__<설명>.sql`)로만 바꾼다. 머지된 마이그레이션은 고치지 않고 새 번호로 더한다(`ddl-auto: validate`).
 - "오늘"과 현재 시각은 주입한 `Clock`(`ClockConfig`, Asia/Seoul)에서만 얻는다. 인자 없는 `now()`(`LocalDate.now()`·`Instant.now()` 등) 직접 호출 금지, `@Scheduled`에는 `zone = "Asia/Seoul"`.
 - 시각 값은 `Instant`, 날짜만이면 `LocalDate`로 두고 `LocalDateTime`으로 시각을 저장하지 않는다.
-- 에이전트 서버 같은 외부 호출에는 연결·응답 제한 시간을 건다. 에이전트가 느리거나 죽어도 로그인·조회 API는 영향을 받지 않아야 한다(서버를 나눈 이유).
+- AI 서버 같은 외부 호출에는 연결·응답 제한 시간을 건다. AI 서버가 느리거나 죽어도 로그인·조회 API는 영향을 받지 않아야 한다(서버를 나눈 이유).
 - 도메인 규칙은 스프링 없는 단위 테스트로, DB가 필요한 테스트는 `@Testcontainers(disabledWithoutDocker = true)`와 `@Import(TestcontainersConfiguration.class)`를 함께 붙인다. CI는 건너뛴 테스트가 있으면 실패하니 `@Disabled`로 끈 테스트를 남기지 않는다.

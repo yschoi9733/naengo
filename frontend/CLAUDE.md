@@ -1,11 +1,11 @@
-# web/CLAUDE.md
+# frontend/CLAUDE.md
 
-레포 맨 위 CLAUDE.md(서버 사이 규칙·게이트·Git·라벨)를 먼저 따른다. 여기는 `web/`에만 해당하는 규칙이다.
+레포 맨 위 CLAUDE.md(서버 사이 규칙·게이트·Git·라벨)를 먼저 따른다. 여기는 `frontend/`에만 해당하는 규칙이다.
 
 ## 프로젝트
 
-- **Naengo Web** — 냉고의 웹 화면. Spring 서버만 부른다.
-- React 19 / TypeScript 7 / Vite 8 / Tailwind CSS 4 / shadcn/ui(`radix-vega`) / oxlint / npm, Node 22.23.2(`.nvmrc`). 명령은 모두 `web/`에서 친다.
+- **Naengo Frontend** — 냉고의 웹 화면. Spring 서버만 부른다.
+- React 19 / TypeScript 7 / Vite 8 / Tailwind CSS 4 / shadcn/ui(`radix-vega`) / oxlint / npm, Node 22.23.2(`.nvmrc`). 명령은 모두 `frontend/`에서 친다.
 
 ## 구조
 

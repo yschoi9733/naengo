@@ -1,8 +1,8 @@
 #!/bin/bash
 # git worktree remove 가 함께 지울 무시 대상 파일 중 다시 만들 수 없는 것을 찾는다. 아무것도 지우지 않는다.
 # remove 는 추적 안 된 파일이 있으면 거부하지만 .gitignore 대상은 묻지 않고 디렉터리째 지운다. 이 레포의
-# 무시 대상에는 비밀 값 파일(.env·.env.*·application-local.*·web 의 *.local)·수집한 데이터(agent/data/·맨 위 /data/)·편집기 설정(.vscode/)·
-# 로그(web/logs/·*.log)처럼 다른 곳에 없을 수 있는 것이 들어 있다.
+# 무시 대상에는 비밀 값 파일(.env·.env.*·application-local.*·frontend 의 *.local)·수집한 데이터(ai/data/·맨 위 /data/)·편집기 설정(.vscode/)·
+# 로그(frontend/logs/·*.log)처럼 다른 곳에 없을 수 있는 것이 들어 있다.
 #
 # 사용: ignored-check.sh <워크트리 경로>
 #   다른 스크립트와 달리 cwd 가 아니라 인자로 받은 워크트리 안에서 git 을 부른다 — 보는 것이 그 워크트리의
@@ -16,23 +16,23 @@
 #   KEEP          그 밖의 무시 대상이 있다. keep <워크트리 기준 상대경로> 줄(최대 20줄), 20개를 넘으면
 #                 keep-more 20+ 줄이 붙는다
 #
-# 다시 만들 수 있는 것으로 치는 것은 /issue 3단계 게이트(CLAUDE.md `빌드 / 실행` 절 — server 의 ./gradlew build,
-# agent 의 uv run ruff·pytest, web 의 npm ci·npm run lint·npm test·npm run build·npm run format:check)와 IDE·하네스가
+# 다시 만들 수 있는 것으로 치는 것은 /issue 3단계 게이트(CLAUDE.md `빌드 / 실행` 절 — backend 의 ./gradlew build,
+# ai 의 uv run ruff·pytest, frontend 의 npm ci·npm run lint·npm test·npm run build·npm run format:check)와 IDE·하네스가
 # 만드는 자리뿐이다:
-#   - web/node_modules 디렉터리(npm ci 가 package-lock.json 대로 통째로 다시 만든다. 개발 서버·Vitest 의 캐시
+#   - frontend/node_modules 디렉터리(npm ci 가 package-lock.json 대로 통째로 다시 만든다. 개발 서버·Vitest 의 캐시
 #     node_modules/.vite·타입 검사의 node_modules/.tmp 도 그 안이다)
-#   - web/dist 디렉터리(게이트의 npm run build 가 만든다. vite build 는 빌드마다 dist 를 비우고 다시 쓰는 산출물
+#   - frontend/dist 디렉터리(게이트의 npm run build 가 만든다. vite build 는 빌드마다 dist 를 비우고 다시 쓰는 산출물
 #     자리라 사람이 무엇을 둘 곳이 아니다)
-#   - server/build·server/.gradle 디렉터리(./gradlew build 가 만드는 산출물과 Gradle 의 프로젝트 캐시)
-#   - agent/.venv 디렉터리(uv run 이 uv.lock 대로 만든다)와 agent/.pytest_cache·agent/.ruff_cache 디렉터리(pytest·ruff
-#     의 캐시), agent/ 아래 어느 깊이든 __pycache__ 디렉터리(파이썬이 import 할 때 쓰는 컴파일 캐시)
+#   - backend/build·backend/.gradle 디렉터리(./gradlew build 가 만드는 산출물과 Gradle 의 프로젝트 캐시)
+#   - ai/.venv 디렉터리(uv run 이 uv.lock 대로 만든다)와 ai/.pytest_cache·ai/.ruff_cache 디렉터리(pytest·ruff
+#     의 캐시), ai/ 아래 어느 깊이든 __pycache__ 디렉터리(파이썬이 import 할 때 쓰는 컴파일 캐시)
 #   이것들은 게이트가 매번 만들어서, 사람이 보게 하면 머지 정리가 매번 멈춘다. 대신 안에 손으로 둔 것(node_modules·
 #   .venv 안을 고친 디버깅 패치, dist·build 에 둔 비교용 파일)은 지켜 주지 않는다 — 남길 패치는 레포에 둔다.
 #   - .claude/settings.local.json 파일(하네스가 그 워크트리에서 받은 허용 설정을 적는다 — 잃어도 다시 묻는다)
 #   - scratchpad/issue-rounds·scratchpad/issue-rereview-rounds 파일(/issue 셀프 리뷰의 셈 기록 — SKILL.md 4단계 "셈 기록",
 #     round-count.sh. PR 이 머지될 때까지 남겨 두는 파일이라, 사람이 보게 하면 머지 정리가 매번 멈춘다. 지운 워크트리를
 #     다시 붙이면 기록이 없어 SKILL.md 대로 셈을 사람에게 묻는다)
-#   - 최상위와 server·agent·web 바로 아래의 .idea 디렉터리(개발자가 PR 의 코드를 보려고 워크트리나 그 폴더를
+#   - 최상위와 backend·ai·frontend 바로 아래의 .idea 디렉터리(개발자가 PR 의 코드를 보려고 워크트리나 그 폴더를
 #     JetBrains IDE(IntelliJ IDEA·PyCharm·WebStorm)로 열면 생긴다 — IDE 가 다시 만든다). 다만 .idea 안에 팀이 남기려고 만드는 폴더(runConfigurations·inspectionProfiles·
 #     dictionaries·scopes·fileTemplates·codeStyles — 프로젝트 파일로 저장한 실행 구성·설정)나 사람이 만든 작업이
 #     남는 자리(shelf — Shelve Changes 로 치워 둔 변경, dataSources 폴더와 DB 연결 설정 파일 dataSources.xml·
@@ -44,8 +44,8 @@
 #     스스로도 쓰는지 재 보지 않아 이 목록에 넣지 않았다 — 넣으면 열기만 해도 정리가 매번 멈출 수 있다
 #   - .DS_Store 파일(링크·디렉터리 제외 — orphan-check.sh 와 같다)
 #   - 빈 디렉터리(하네스가 워크트리 안에 빈 .claude/worktrees/ 를 만든다 — 실측)
-# 그 밖의 무시 대상은 늘 KEEP 으로 나온다 — 비밀 값 .env·web/.env.local, 수집한 데이터 agent/data/·맨 위 /data/, 편집기 설정 .vscode/ 안의 파일(extensions.json 밖),
-# 로그 web/logs/·*.log, web/dist-ssr/ 같은 것이다. 게이트가 늘 만든다고 실측한 자리만 이 목록에 더한다(.gitignore 에 걸려 사람이 둔 스크립트·메모가 추적
+# 그 밖의 무시 대상은 늘 KEEP 으로 나온다 — 비밀 값 .env·frontend/.env.local, 수집한 데이터 ai/data/·맨 위 /data/, 편집기 설정 .vscode/ 안의 파일(extensions.json 밖),
+# 로그 frontend/logs/·*.log, frontend/dist-ssr/ 같은 것이다. 게이트가 늘 만든다고 실측한 자리만 이 목록에 더한다(.gitignore 에 걸려 사람이 둔 스크립트·메모가 추적
 # 밖에 숨을 수 있어서다 — 이전 리뷰에서 나온 기준이다).
 # 이름만으로 넘기지 않는다. 같은 이름이 다른 자리에 있으면 사람이 만든 것일 수 있다 — 엉뚱한 자리의 node_modules·
 # dist·.idea·.venv·__pycache__(.gitignore 가 어느 깊이든 무시한다), scratchpad/ 에 남긴 메모(이전 리뷰에서 실측).
@@ -128,15 +128,15 @@ regenerable() {
       ;;
   esac
   case "$q" in
-    web/node_modules | web/dist | server/build | server/.gradle | agent/.venv | agent/.pytest_cache | agent/.ruff_cache)
+    frontend/node_modules | frontend/dist | backend/build | backend/.gradle | ai/.venv | ai/.pytest_cache | ai/.ruff_cache)
       plain_dir "$q"
       return
       ;;
-    agent/*/__pycache__ | agent/__pycache__)
+    ai/*/__pycache__ | ai/__pycache__)
       plain_dir "$q"
       return
       ;;
-    .idea | server/.idea | agent/.idea | web/.idea)
+    .idea | backend/.idea | ai/.idea | frontend/.idea)
       plain_dir "$q" && ide_local_only "$q"
       return
       ;;
