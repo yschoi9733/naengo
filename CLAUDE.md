@@ -2,7 +2,7 @@
 
 ## 프로젝트
 
-- **냉고** — 냉장고 재고를 중심에 둔 레시피 추천 AI. 캡스톤 냉고([yschoi9733/naengo-ai](https://github.com/yschoi9733/naengo-ai))를 기획부터 다시 만드는 개인 포트폴리오 프로젝트다(상업 서비스가 아니다).
+- **냉고** — 냉장고 재고를 중심에 둔 레시피 추천 AI. 캡스톤 냉고([2026-UOS-Capstone-Design-Team-4/naengo-ai](https://github.com/2026-UOS-Capstone-Design-Team-4/naengo-ai))를 기획부터 다시 만드는 개인 포트폴리오 프로젝트다(상업 서비스가 아니다).
 - 모노레포: `backend/`(Spring 본 서버) · `ai/`(Python AI 서버 — LangGraph 에이전트) · `frontend/`(웹 화면) · `docs/`(설계 문서). 폴더마다 자기 CLAUDE.md가 있으니, 그 폴더를 고치기 전에 읽는다.
 - 설계 정본은 `docs/`다(서버 구성·테이블 주인은 `docs/architecture.md`). 코드와 문서가 어긋나면 같은 PR에서 함께 고친다.
 

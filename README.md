@@ -1,6 +1,6 @@
 # 냉고
 
-냉장고 재고를 중심에 둔 레시피 추천 AI입니다. 캡스톤 디자인에서 만든 옛 냉고 AI 서버([yschoi9733/naengo-ai](https://github.com/yschoi9733/naengo-ai))를 기획부터 다시 만들고 있습니다.
+냉장고 재고를 중심에 둔 레시피 추천 AI입니다. 캡스톤 디자인에서 만든 옛 냉고 AI 서버([캡스톤 팀 레포](https://github.com/2026-UOS-Capstone-Design-Team-4/naengo-ai))를 기획부터 다시 만들고 있습니다.
 
 범용 요리 챗봇으로는 Gemini 같은 범용 AI를 이기기 어렵습니다. 그래서 냉고는 범용 AI가 모르는 **내 냉장고 재고**와, 알레르기 재료를 절대 내보내지 않는 추천에 집중합니다.
 
