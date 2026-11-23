@@ -36,7 +36,7 @@
 
 ```bash
 cd server
-cp -n .env.example .env   # 처음 한 번(이미 있으면 덮어쓰지 않는다)
+[ -f .env ] || cp .env.example .env   # 처음 한 번(이미 있으면 덮어쓰지 않는다)
 docker compose up -d --wait
 ./gradlew bootRun
 ```

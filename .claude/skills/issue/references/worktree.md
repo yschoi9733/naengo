@@ -546,7 +546,7 @@ pgrep -fl '\.app/Contents/MacOS/(webstorm|idea|pycharm)( |$)'
 
 **먼저 `remove` 가 함께 지울 무시 대상 파일을 본다.** `remove` 는 추적 안 된 파일이 있으면 거부하지만
 `.gitignore` 대상은 묻지 않고 디렉터리째 지운다. 이 레포의 무시 대상에는 비밀 값 파일(`.env`·`application-local.*`),
-수집한 데이터(`agent/data/`·`data/`), 편집기 설정(`.vscode/`)처럼 다른 곳에 없을 수 있는 것이 들어 있다:
+수집한 데이터(`agent/data/`·레포 맨 위 `/data/`), 편집기 설정(`.vscode/`)처럼 다른 곳에 없을 수 있는 것이 들어 있다:
 
 ```
 bash "<사본>/scripts/ignored-check.sh" "<대상 path>"
