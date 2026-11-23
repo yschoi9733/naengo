@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: naengo-server
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/naengo}
+    username: ${DB_USERNAME:naengo}
+    password: ${DB_PASSWORD:naengo}
+  jpa:
+    hibernate:
+      ddl-auto: validate   # 테이블은 Flyway(db/migration)가 만들고, JPA는 엔티티와 맞는지 확인만 한다
+    open-in-view: false
+  jackson:
+    deserialization:
+      accept-float-as-int: false   # 정수 칸에 2.5 같은 소수가 오면 잘라 받지 않고 400으로 돌려준다
+    datatype:
+      enum:
+        fail-on-numbers-for-enums: true   # 열거형 자리에 숫자(0, "2")가 오면 순번으로 받지 않고 400으로 돌려준다

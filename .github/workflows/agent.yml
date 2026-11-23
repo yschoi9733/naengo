@@ -1,0 +1,43 @@
+name: agent
+
+# 아래 두 paths 목록은 같게 둔다(PR과 main push가 같은 파일을 보게)
+on:
+  pull_request:
+    paths:
+      - agent/**
+      - .github/workflows/agent.yml
+  push:
+    branches: [main]
+    paths:
+      - agent/**
+      - .github/workflows/agent.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: agent
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          working-directory: agent
+          enable-cache: true
+      # uv.lock과 pyproject.toml이 어긋나면 고치지 않고 실패한다
+      - id: sync
+        run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run pytest
+      # 서식은 uv run ruff format .으로 바로 고쳐지니 맨 뒤에 두되, 앞 단계가 실패해도 결과가 함께 보이게 따로 돌린다
+      - if: ${{ !cancelled() && steps.sync.outcome == 'success' }}
+        run: uv run ruff format --check .

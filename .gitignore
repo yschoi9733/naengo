@@ -1,0 +1,33 @@
+### 비밀 값·로컬 설정 (커밋 금지) ###
+.env
+.env.*
+!.env.example
+application-local.*
+
+### 수집한 데이터 (공개 레포라 커밋 금지 — CLAUDE.md 공통 규칙) ###
+/data/
+
+### server (Gradle) ###
+server/.gradle/
+server/build/
+
+### agent (Python) ###
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+
+### web 은 web/.gitignore 에 따로 있다 ###
+
+### 편집기 ###
+.idea/
+*.iml
+.vscode/
+
+### macOS ###
+.DS_Store
+
+### Claude Code: /issue 스킬의 워크트리·개인 설정·임시 파일(scratchpad) (.claude/ 통째로 무시하면 .claude/skills 커밋까지 막혀서 경로별로 나눈다) ###
+.claude/worktrees/
+.claude/settings.local.json
+/scratchpad/

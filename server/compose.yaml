@@ -1,0 +1,26 @@
+# 로컬 개발용 MySQL. server/에서 `docker compose up -d --wait`로 띄운다(접속 준비가 끝날 때까지 기다린다).
+# 계정·비밀번호는 내 컴퓨터에서만 쓰는 값이다.
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: naengo
+      # 서버와 같은 server/.env 값을 쓴다. MySQL은 이 값을 데이터 볼륨을 처음 만들 때만 적용하므로,
+      # 바꾼 뒤에는 docker compose down -v로 볼륨을 지우고 다시 띄운다
+      MYSQL_USER: ${DB_USERNAME:-naengo}
+      MYSQL_PASSWORD: ${DB_PASSWORD:-naengo}
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "127.0.0.1:3306:3306"   # 내 컴퓨터에서만 접속
+    volumes:
+      - mysql-data:/var/lib/mysql
+    # 처음 띄울 때는 데이터 폴더를 만드느라 접속을 받기까지 10~30초 걸린다. TCP로 ping이 되면 준비된 것으로 본다
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+      start_period: 60s
+
+volumes:
+  mysql-data:
