@@ -1,6 +1,6 @@
 # 서버 구성
 
-냉고는 서버를 둘로 나눈다. 웹이 부르는 API는 모두 Spring 본 서버(`backend/`)가 맡고, AI 기능(채팅 답변, 레시피 검색 색인, 레시피 수집, 재료 인식)은 Python AI 서버(`ai/`)가 맡는다.
+냉고는 서버를 둘로 나눈다. 웹이 부르는 API는 모두 Spring 본 서버(`backend/`)가 맡고, AI 기능(채팅 답변, 레시피 검색 색인, 레시피 수집, 평가, 나중에 붙일 재료 인식)은 Python AI 서버(`ai/`)가 맡는다.
 
 ```
 웹 ──HTTP·SSE──▶ Spring (MySQL) ──내부 HTTP──▶ Python (Postgres + pgvector) ──▶ Gemini API
