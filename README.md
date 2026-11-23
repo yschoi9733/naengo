@@ -45,7 +45,7 @@ AI 서버 (http://localhost:8000)
 
 ```bash
 cd ai
-uv run uvicorn naengo_agent.main:app --reload --port 8000
+uv run uvicorn naengo_ai.main:app --reload --port 8000
 ```
 
 프론트엔드 (http://localhost:5173, `/api` 요청은 8080으로 넘깁니다)

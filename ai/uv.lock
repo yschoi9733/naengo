@@ -208,7 +208,7 @@ wheels = [
 ]
 
 [[package]]
-name = "naengo-agent"
+name = "naengo-ai"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [

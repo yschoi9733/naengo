@@ -1,5 +1,5 @@
 [project]
-name = "naengo-agent"
+name = "naengo-ai"
 version = "0.1.0"
 description = "냉고 AI 서버(LangGraph) — 밖에 열지 않고 Spring에서만 호출을 받는 내부 서버"
 authors = [
