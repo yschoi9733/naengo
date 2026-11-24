@@ -27,10 +27,10 @@
 
 - 로컬 실행은 README "로컬 실행" 절을 따른다.
 - 기본 게이트(Claude가 PR 전에 돌리는 검사)는 고친 폴더마다 그 폴더에서 돌린다.
-- `backend/` 게이트: `./gradlew build`. Docker가 꺼져 DB 테스트가 SKIPPED로 끝나면 그 사실을 PR에 적고 CI 결과로 넘긴다.
-- `ai/` 게이트: `uv run ruff format --check . && uv run ruff check . && uv run pytest`
-- `frontend/` 게이트: `npm run format:check && npm run lint && npm test && npm run build`
-- `.github/`를 고쳤으면 그 워크플로가 보는 폴더의 게이트를, `.claude/skills/`나 `.gitignore`를 고쳤으면 레포 맨 위에서 `bash .claude/skills/issue/tests/run.sh`를 돌린다.
+- 기본 게이트 — `backend/`: `./gradlew build`(컴파일+테스트, Bash 제한 시간은 10분). Docker가 꺼져 DB 테스트가 SKIPPED로 끝나면 그 사실을 PR에 적고 CI 결과로 넘긴다.
+- 기본 게이트 — `ai/`: `uv run ruff format --check . && uv run ruff check . && uv run pytest`.
+- 기본 게이트 — `frontend/`: `npm run format:check && npm run lint && npm test && npm run build`(빌드에 타입 검사가 들어 있다).
+- 기본 게이트 — `.github/`를 고쳤으면 그 워크플로가 보는 폴더의 게이트를, `.claude/skills/`나 `.gitignore`를 고쳤으면 레포 맨 위에서 `bash .claude/skills/issue/tests/run.sh`를 돌린다.
 
 ## Git / 협업 규칙
 
