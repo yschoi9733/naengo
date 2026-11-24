@@ -23,5 +23,5 @@
 - DB 스키마는 Flyway(`src/main/resources/db/migration/V<번호>__<설명>.sql`)로만 바꾼다. 머지된 마이그레이션은 고치지 않고 새 번호로 더한다(`ddl-auto: validate`).
 - "오늘"과 현재 시각은 주입한 `Clock`(`ClockConfig`, Asia/Seoul)에서만 얻는다. 인자 없는 `now()`(`LocalDate.now()`·`Instant.now()` 등) 직접 호출 금지, `@Scheduled`에는 `zone = "Asia/Seoul"`.
 - 시각 값은 `Instant`, 날짜만이면 `LocalDate`로 두고 `LocalDateTime`으로 시각을 저장하지 않는다.
-- AI 서버 호출은 `docs/architecture.md` "장애 격리"대로 다른 API와 떼어 놓는다. 제한 시간·동시 처리 수 제한의 값과 방식은 그 기능의 이슈에서 정한다.
+- AI 서버 호출은 `docs/architecture.md` "장애 격리"대로 다른 API와 떼어 놓는다. 제한 시간·동시 처리 수 제한의 값과 방식은 첫 AI 채팅 이슈에서 정하고, 뒤에 AI 서버를 부르는 기능은 그것을 따른다.
 - 도메인 규칙은 스프링 없는 단위 테스트로, DB가 필요한 테스트는 `@Testcontainers(disabledWithoutDocker = true)`와 `@Import(TestcontainersConfiguration.class)`를 함께 붙인다. `@Disabled`로 끈 테스트를 남기지 않는다(CI는 건너뛴 테스트가 있으면 실패한다).
