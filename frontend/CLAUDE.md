@@ -12,7 +12,7 @@
 - 화면 구조(폴더·라우터)는 첫 화면 이슈에서 정하고 이 절에 적는다.
 - `src/components/ui/`·`src/hooks/`·`src/lib/utils.ts`는 shadcn/ui가 만든 파일이다. `npx shadcn add <이름>`으로만 더하고 손으로 고치지 않는다(Prettier·oxlint·셀프 리뷰 대상도 아니다). `shadcn add`는 `src/index.css`도 고칠 수 있어서, 뒤에 `npm run format`을 돌린다.
 - 서버는 `/api/v1/...` 경로로만 부른다. 서버 도메인을 코드·`VITE_` 환경변수에 두지 않는다(로컬은 Vite 프록시가 넘긴다).
-- 비밀 값은 코드·`.env*`·`VITE_` 환경변수에 두지 않는다(코드와 `VITE_` 변수는 화면 번들에 실려 누구나 본다).
+- 비밀 값은 코드·`.env*`·`VITE_` 환경변수에 두지 않는다.
 
 ## 코딩 규칙
 
