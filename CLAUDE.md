@@ -26,11 +26,11 @@
 ## 빌드 / 실행
 
 - 로컬 실행은 README "로컬 실행" 절을 따른다.
-- 기본 게이트(Claude가 PR 전에 돌리는 검사)는 아래 줄 가운데 고친 곳에 해당하는 것을 돌린다. 폴더 게이트는 그 폴더에서 돌린다.
+- 기본 게이트(Claude가 PR 전에 돌리는 검사)는 아래 줄 가운데 고친 곳에 해당하는 것을 돌린다. 폴더 게이트는 그 폴더에서 돌리고, 어느 줄에도 해당하지 않는 파일(`docs/`·README 등)은 게이트 없이 리뷰로 본다.
 - 기본 게이트 — `backend/`: `./gradlew build`(컴파일+테스트, Bash 제한 시간은 10분). Docker가 꺼져 DB 테스트가 SKIPPED로 끝나면 그 사실을 PR에 적고 CI 결과로 넘긴다.
 - 기본 게이트 — `ai/`: `uv run ruff format --check . && uv run ruff check . && uv run pytest`.
 - 기본 게이트 — `frontend/`: `npm run format:check && npm run lint && npm test && npm run build`(빌드에 타입 검사가 들어 있다).
-- 기본 게이트 — `.github/`·`.claude/skills/`·`.gitignore`: `.github/`를 고쳤으면 그 워크플로가 보는 폴더의 게이트를, `.claude/skills/`나 `.gitignore`를 고쳤으면 레포 맨 위에서 `bash .claude/skills/issue/tests/run.sh`를 돌린다.
+- 기본 게이트 — `.github/`·`.claude/skills/`·`.gitignore`(맨 위·`frontend/`): `.github/`를 고쳤으면 그 워크플로가 보는 폴더의 게이트를, `.claude/skills/`나 `.gitignore`를 고쳤으면 레포 맨 위에서 `bash .claude/skills/issue/tests/run.sh`를 돌린다.
 
 ## Git / 협업 규칙
 
