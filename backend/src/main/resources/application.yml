@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: naengo-backend
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3306/naengo}
+    username: ${DB_USERNAME:naengo}
+    # 기본값을 두지 않는다 — 로컬은 backend/.env(.env.example을 복사), 배포는 환경변수로 받는다. 값이 없으면 접속 비밀번호가
+    # 글자 그대로 ${DB_PASSWORD}가 되어 MySQL이 Access denied로 거절한다. IDE에서 main을 바로 띄울 때도 이 값을 넘긴다
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: validate   # 테이블은 Flyway(db/migration)가 만들고, JPA는 엔티티와 맞는지 확인만 한다
+    open-in-view: false
+  jackson:
+    deserialization:
+      accept-float-as-int: false   # 정수 칸에 2.5 같은 소수가 오면 잘라 받지 않고 400으로 돌려준다
+    datatype:
+      enum:
+        fail-on-numbers-for-enums: true   # 열거형 자리에 숫자(0, "2")가 오면 순번으로 받지 않고 400으로 돌려준다

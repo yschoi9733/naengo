@@ -1,0 +1,44 @@
+name: frontend
+
+# 아래 두 paths 목록은 같게 둔다(PR과 main push가 같은 파일을 보게)
+on:
+  pull_request:
+    paths:
+      - frontend/**
+      - .github/workflows/frontend.yml
+  push:
+    branches: [main]
+    paths:
+      - frontend/**
+      - .github/workflows/frontend.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: frontend/.nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - id: install
+        run: npm ci
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      # 서식은 npm run format으로 바로 고쳐지니 맨 뒤에 두되, 앞 단계가 실패해도 결과가 함께 보이게 따로 돌린다
+      - if: ${{ !cancelled() && steps.install.outcome == 'success' }}
+        run: npm run format:check

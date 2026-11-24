@@ -1,0 +1,44 @@
+name: ai
+
+# 아래 두 paths 목록은 같게 둔다(PR과 main push가 같은 파일을 보게)
+on:
+  pull_request:
+    paths:
+      - ai/**
+      - .github/workflows/ai.yml
+  push:
+    branches: [main]
+    paths:
+      - ai/**
+      - .github/workflows/ai.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: ai
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      # setup-uv는 v10 같은 큰 판 태그를 두지 않아서 정확한 판의 커밋으로 고정한다
+      - uses: astral-sh/setup-uv@1db35dd8eee11c5894872e0b383ae6c406cf738d # v10.4.0
+        with:
+          working-directory: ai
+          enable-cache: true
+      # uv.lock과 pyproject.toml이 어긋나면 고치지 않고 실패한다
+      - id: sync
+        run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run pytest
+      # 서식은 uv run ruff format .으로 바로 고쳐지니 맨 뒤에 두되, 앞 단계가 실패해도 결과가 함께 보이게 따로 돌린다
+      - if: ${{ !cancelled() && steps.sync.outcome == 'success' }}
+        run: uv run ruff format --check .

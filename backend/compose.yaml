@@ -1,0 +1,30 @@
+# 로컬 개발용 MySQL. backend/에서 `docker compose up -d --wait`로 띄운다(접속 준비가 끝날 때까지 기다린다).
+# 계정·비밀번호는 내 컴퓨터에서만 쓰는 값이다.
+# 프로젝트 이름을 박아 둔다 — 안 박으면 폴더 이름(backend)을 따라가서, backend/compose.yaml을 쓰는 다른 레포와 볼륨을 같이 쓰게 된다.
+# 이 레포의 워크트리끼리는 같은 DB를 쓴다(한 워크트리에서 down -v를 치면 다른 워크트리의 데이터도 지워진다)
+name: naengo
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: naengo
+      # 서버와 같은 backend/.env 값을 쓴다(서버도 비밀번호 기본값이 없어서, 여기서도 없으면 바로 멈춘다 — down 같은 다른
+      # compose 명령도 같다). MySQL은 이 값을 데이터 볼륨을 처음 만들 때만 적용하므로, 바꾼 뒤에는 docker compose down -v로
+      # 볼륨을 지우고 다시 띄운다
+      MYSQL_USER: ${DB_USERNAME:-naengo}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?backend/.env에 DB_PASSWORD가 없다 — .env가 없으면 .env.example을 복사한다}
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "127.0.0.1:3306:3306"   # 내 컴퓨터에서만 접속
+    volumes:
+      - mysql-data:/var/lib/mysql
+    # 처음 띄울 때는 데이터 폴더를 만드느라 접속을 받기까지 10~30초 걸린다. TCP로 ping이 되면 준비된 것으로 본다
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+      start_period: 60s
+
+volumes:
+  mysql-data:
