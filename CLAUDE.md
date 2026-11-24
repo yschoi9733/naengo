@@ -11,7 +11,7 @@
 `docs/architecture.md`를 줄인 것이다. 바꿀 때는 그 문서부터 고친다.
 
 - 웹은 Spring만 부른다. Python AI 서버는 밖에 열지 않고, Spring이 내부 HTTP와 내부 토큰으로만 부른다. 사용자 로그인 토큰은 Spring에서 끝난다.
-- DB 테이블마다 주인 서버는 하나다(어느 테이블이 어느 서버 것인지는 `docs/architecture.md`).
+- DB 테이블마다 주인 서버는 하나다. Spring(MySQL)은 사용자·프로필·냉장고 재고·재료 인식 작업·채팅방과 메시지(대화 기록의 정본)·좋아요·스크랩·레시피 원본·재료 표준 사전을, Python(Postgres+pgvector)은 검색 색인과 수집 작업 테이블만 갖는다.
 - 남의 테이블은 직접 읽거나 쓰지 않고 주인 서버의 API를 부른다. Python이 검색하다가 Spring을 되부르지 않는다(순환 호출).
 - LLM과 임베딩 모델은 Python만 부른다.
 - 두 서버 사이 API를 바꾸면 양쪽을 같은 PR에서 고친다.
@@ -26,17 +26,17 @@
 ## 빌드 / 실행
 
 - 로컬 실행은 README "로컬 실행" 절을 따른다.
-- 기본 게이트(Claude가 PR 전에 돌리는 검사)는 고친 폴더마다 그 폴더에서 돌린다.
+- 기본 게이트(Claude가 PR 전에 돌리는 검사)는 고친 폴더마다 그 폴더에서 돌린다(아래에 위치를 따로 적은 것은 그 위치에서).
 - 기본 게이트 — `backend/`: `./gradlew build`(컴파일+테스트, Bash 제한 시간은 10분). Docker가 꺼져 DB 테스트가 SKIPPED로 끝나면 그 사실을 PR에 적고 CI 결과로 넘긴다.
 - 기본 게이트 — `ai/`: `uv run ruff format --check . && uv run ruff check . && uv run pytest`.
 - 기본 게이트 — `frontend/`: `npm run format:check && npm run lint && npm test && npm run build`(빌드에 타입 검사가 들어 있다).
-- 기본 게이트 — `.github/`를 고쳤으면 그 워크플로가 보는 폴더의 게이트를, `.claude/skills/`나 `.gitignore`를 고쳤으면 레포 맨 위에서 `bash .claude/skills/issue/tests/run.sh`를 돌린다.
+- 기본 게이트 — 그 밖의 파일: `.github/`를 고쳤으면 그 워크플로가 보는 폴더의 게이트를, `.claude/skills/`나 `.gitignore`를 고쳤으면 레포 맨 위에서 `bash .claude/skills/issue/tests/run.sh`를 돌린다.
 
 ## Git / 협업 규칙
 
 - `main` 직접 push 금지. 흐름: **이슈 먼저** → 최신 `main`에서 `<타입>/<이슈번호>-<기능>` 브랜치 → PR 본문 첫 줄에 `Closes #<이슈번호>`.
 - 기능 작업은 `/issue <번호> naengo`로 한다(`.claude/skills/issue`). 사람은 PR을 코드 리뷰하고 머지한다.
-- **Squash 머지 전용**(merge commit·rebase 비활성, 머지하면 브랜치 자동 삭제). PR 제목은 커밋 컨벤션(`feat: ...`)을 따른다.
+- **Squash 머지 전용**(merge commit·rebase 비활성, 머지하면 브랜치 자동 삭제). PR 제목이 `main`의 커밋 메시지가 되니, 커밋 컨벤션(`feat: ...`)을 따르고 범위가 바뀌면 제목도 고친다.
 - 커밋 메시지·이슈·PR은 한국어로 쓴다. 커밋·PR 어디에도 AI 관여 표기(Co-Authored-By, Generated with 등)를 넣지 않는다.
 - PR 본문에 머지 조건·머지 담당 문장을 넣지 않는다.
 - 스테이징은 파일을 지정해서 한다 — `git add -A` 금지.
