@@ -16,7 +16,7 @@ FROM eclipse-temurin:21-jre
 RUN apt-get update \
     && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
-RUN groupadd --system naengo && useradd --system --gid naengo --no-create-home naengo
+RUN groupadd --system naengo && useradd --system --gid naengo --create-home naengo
 WORKDIR /app
 COPY --from=build /src/build/libs/*.jar app.jar
 USER naengo
