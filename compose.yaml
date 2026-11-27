@@ -1,0 +1,59 @@
+# 로컬 실행용. 레포 맨 위에서 친다 — backend·ai·MySQL을 한 번에 띄울 때는 `docker compose up -d --build --wait`,
+# 개발할 때 DB만 띄울 때는 `docker compose up -d --wait mysql`(--wait는 healthcheck가 통과할 때까지 기다린다).
+# 계정·비밀번호는 내 컴퓨터에서만 쓰는 값이다.
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: naengo
+      # 서버와 같은 맨 위 .env 값을 쓴다(서버도 비밀번호 기본값이 없어서, 여기서도 없으면 바로 멈춘다 — down 같은 다른
+      # compose 명령도 같다). MySQL은 이 값을 데이터 볼륨을 처음 만들 때만 적용하므로, 바꾼 뒤에는 docker compose down -v로
+      # 볼륨을 지우고 다시 띄운다
+      MYSQL_USER: ${DB_USERNAME:-naengo}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?.env에 DB_PASSWORD가 없다 — 레포 맨 위에 .env가 없으면 .env.example을 복사한다}
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "127.0.0.1:3306:3306"   # 내 컴퓨터에서만 접속
+    volumes:
+      - mysql-data:/var/lib/mysql
+    # 처음 띄울 때는 데이터 폴더를 만드느라 접속을 받기까지 10~30초 걸린다. TCP로 ping이 되면 준비된 것으로 본다
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "--silent"]
+      interval: 3s
+      timeout: 3s
+      retries: 30
+      start_period: 60s
+
+  backend:
+    build: ./backend
+    environment:
+      # application.yml의 기본 주소(localhost)는 컨테이너 안에서 닿지 않으니 compose 안의 이름으로 넘긴다
+      DB_URL: jdbc:mysql://mysql:3306/naengo
+      DB_USERNAME: ${DB_USERNAME:-naengo}
+      DB_PASSWORD: ${DB_PASSWORD:?.env에 DB_PASSWORD가 없다 — 레포 맨 위에 .env가 없으면 .env.example을 복사한다}
+    ports:
+      - "127.0.0.1:8080:8080"   # 내 컴퓨터에서만 접속
+    depends_on:
+      mysql:
+        condition: service_healthy
+    # /actuator/health는 DB에 붙지 못해도 DOWN(503)이 되어 실패한다
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://127.0.0.1:8080/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 60s
+
+  # 호스트에 포트를 열지 않는다(AI 서버는 밖에 열지 않는다). backend 컨테이너는 http://ai:8000으로 닿는다
+  ai:
+    build: ./ai
+    # 실행 이미지에 curl이 없어서 파이썬으로 부른다
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 30s
+
+volumes:
+  mysql-data:

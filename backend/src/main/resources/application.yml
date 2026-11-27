@@ -4,7 +4,7 @@ spring:
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/naengo}
     username: ${DB_USERNAME:naengo}
-    # 기본값을 두지 않는다 — 로컬은 backend/.env(.env.example을 복사), 배포는 환경변수로 받는다. 값이 없으면 접속 비밀번호가
+    # 기본값을 두지 않는다 — 로컬은 레포 맨 위 .env(.env.example을 복사), 배포는 환경변수로 받는다. 값이 없으면 접속 비밀번호가
     # 글자 그대로 ${DB_PASSWORD}가 되어 MySQL이 Access denied로 거절한다. IDE에서 main을 바로 띄울 때도 이 값을 넘긴다
     password: ${DB_PASSWORD}
   jpa:
@@ -17,3 +17,10 @@ spring:
     datatype:
       enum:
         fail-on-numbers-for-enums: true   # 열거형 자리에 숫자(0, "2")가 오면 순번으로 받지 않고 400으로 돌려준다
+
+# 컨테이너 상태 확인(compose healthcheck)에 /actuator/health만 연다. 웹이 부르는 API가 아니라 /api/v1 아래에 두지 않는다
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
