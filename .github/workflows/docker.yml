@@ -1,0 +1,96 @@
+name: docker
+
+# 아래 두 paths 목록은 같게 둔다(PR과 main push가 같은 파일을 보게)
+on:
+  pull_request:
+    paths:
+      - compose.yaml
+      - .env.example
+      - backend/**
+      - ai/**
+      - .github/workflows/docker.yml
+  push:
+    branches: [main]
+    paths:
+      - compose.yaml
+      - .env.example
+      - backend/**
+      - ai/**
+      - .github/workflows/docker.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      # 체크아웃에는 비밀 값 파일과 수집 데이터가 원래 없으니 가짜 파일을 만들어 두고, 빌드 컨텍스트를 통째로 꺼내 본다.
+      # 최종 이미지로는 못 본다 — backend는 다단계 빌드라 .dockerignore가 틀려도 실행 이미지에는 jar만 남는다
+      - name: 빌드 컨텍스트에서 비밀 값·수집 데이터가 빠지는지
+        run: |
+          fakes=(
+            backend/.env
+            backend/.env.local
+            backend/src/main/resources/application-local.yml
+            ai/.env
+            ai/.env.local
+            ai/src/.env
+            ai/data/raw/recipe.json
+          )
+          for f in "${fakes[@]}"; do
+            mkdir -p "$(dirname "$f")"
+            echo fake > "$f"
+          done
+          for ctx in backend ai; do
+            printf 'FROM scratch\nCOPY . /\n' | docker build -q -f - --output "type=local,dest=$RUNNER_TEMP/ctx-$ctx" "$ctx"
+          done
+          # 꺼내기가 제대로 됐는지(빈 결과로 통과하지 않게) 들어가야 할 파일부터 본다
+          test -f "$RUNNER_TEMP/ctx-backend/build.gradle"
+          test -f "$RUNNER_TEMP/ctx-ai/pyproject.toml"
+          leaked=0
+          for f in "${fakes[@]}"; do
+            if [ -e "$RUNNER_TEMP/ctx-$f" ]; then
+              echo "빌드 컨텍스트에 들어갔다: $f"
+              leaked=1
+            fi
+          done
+          exit "$leaked"
+
+      - run: cp .env.example .env
+
+      - name: 이미지를 빌드하고 세 서비스가 healthy로 뜨는지
+        run: docker compose up -d --build --wait --wait-timeout 300
+
+      # ai의 healthcheck는 컨테이너 안에서 자기 자신을 부르는 것이라, 다른 컨테이너가 ai라는 이름으로 닿는지는 따로 본다
+      - name: backend 컨테이너에서 http://ai:8000에 닿는지
+        run: docker compose exec -T backend curl -fsS --max-time 5 http://ai:8000/health
+
+      - name: 호스트에서 8000이 닫혀 있는지
+        run: |
+          rc=0
+          curl -sS --max-time 5 http://localhost:8000/health || rc=$?
+          # 7은 연결 거부다. 0(닿았다)이나 다른 실패면 ai 포트가 열렸는지 본다
+          if [ "$rc" -ne 7 ]; then
+            echo "호스트에서 8000을 부른 결과가 연결 거부가 아니다(curl 종료 코드 $rc)"
+            exit 1
+          fi
+
+      - name: backend·ai가 root가 아닌 사용자로 도는지
+        run: |
+          for svc in backend ai; do
+            uid=$(docker compose exec -T "$svc" id -u)
+            echo "$svc uid=$uid"
+            [ "$uid" != 0 ]
+          done
+
+      - name: 실패하면 컨테이너 로그 보기
+        if: failure()
+        run: docker compose logs --no-color
