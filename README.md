@@ -36,7 +36,7 @@ DB 비밀번호 같은 로컬 값은 레포 맨 위 `.env` 하나에 두고, doc
 [ -f .env ] || cp .env.example .env   # 이미 있으면 덮어쓰지 않는다
 ```
 
-> 예전 안내대로 `backend/.env`를 만들어 두었다면, 이제 그 파일을 읽는 곳이 없고, 읽지 않는다는 오류도 나지 않습니다. 레포 맨 위로 옮깁니다(`mv backend/.env .env`, 맨 위 `.env`가 이미 있으면 값을 옮겨 적고 `backend/.env`는 지웁니다).
+> 예전 안내대로 `backend/.env`를 만들어 두었다면, 이제 그 파일을 읽는 곳이 없고, 읽지 않는다는 오류도 나지 않습니다. 레포 맨 위로 옮깁니다(`mv backend/.env .env`, 맨 위 `.env`가 이미 있으면 값을 옮겨 적고 `backend/.env`는 지웁니다). 예전처럼 `backend/`에서 `docker compose up -d --wait`를 치면 위 폴더의 compose.yaml을 찾아 세 서비스를 모두 띄우니(backend 컨테이너가 8080을 잡아 bootRun이 뜨지 않습니다), DB만 띄울 때는 아래처럼 `mysql`을 붙입니다.
 
 띄우는 방법은 두 가지입니다. 서버 코드를 고칠 때는 DB만 Docker로 띄우고 서버는 로컬에서 실행합니다. 세 서버를 한 번에 확인할 때는 backend·ai·MySQL을 compose 명령 한 줄로 띄웁니다. 웹 화면(프론트엔드)은 어느 쪽이든 따로 띄웁니다.
 
