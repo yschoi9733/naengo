@@ -3,19 +3,14 @@
 # 수집한 데이터(공개 레포라 커밋도 하지 않는다) — 이미지에 들어가지 않게 하는 것이 가장 중요하다
 data/
 
-# 비밀 값 파일
 **/.env
 **/.env.*
 **/application-local.*
-
-# 가상환경·캐시·빌드 산출물
 .venv/
 **/__pycache__/
 .pytest_cache/
 .ruff_cache/
 dist/
-
-# 편집기·OS
 .idea/
 **/.vscode/
 **/.DS_Store

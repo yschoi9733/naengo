@@ -73,8 +73,15 @@ jobs:
       - name: backend 컨테이너에서 http://ai:8000에 닿는지
         run: docker compose exec -T backend curl -fsS --max-time 5 http://ai:8000/health
 
-      - name: 호스트에서 8000이 닫혀 있는지
+      - name: 호스트에 ai 포트가 열리지 않았는지
         run: |
+          # compose의 ports:가 그대로 들어가는 설정이라, 8000이 아닌 호스트 포트(ports: ["8000"] 등)로 열려도 여기서 걸린다
+          bindings=$(docker inspect -f '{{json .HostConfig.PortBindings}}' "$(docker compose ps -q ai)")
+          echo "ai 포트 바인딩: $bindings"
+          case "$bindings" in
+            "{}" | null) ;;
+            *) echo "ai에 호스트 포트가 열려 있다"; exit 1 ;;
+          esac
           rc=0
           curl -sS --max-time 5 http://localhost:8000/health || rc=$?
           # 7은 연결 거부다. 0(닿았다)이나 다른 실패면 ai 포트가 열렸는지 본다
