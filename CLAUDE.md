@@ -30,7 +30,7 @@
 - 기본 게이트 — `backend/`: `./gradlew build`(컴파일+테스트, Bash 제한 시간은 10분). Docker가 꺼져 DB 테스트가 SKIPPED로 끝나면 그 사실을 PR에 적고 CI 결과로 넘긴다.
 - 기본 게이트 — `ai/`: `uv run ruff format --check . && uv run ruff check . && uv run pytest`.
 - 기본 게이트 — `frontend/`: `npm run format:check && npm run lint && npm test && npm run build`(빌드에 타입 검사가 들어 있다).
-- 기본 게이트 — Docker(`compose.yaml`·`.env.example`, `backend/`·`ai/`의 `Dockerfile`·`.dockerignore`, `.github/workflows/docker.yml` — 이 워크플로는 아래 줄의 폴더 게이트 대신 이 줄을 따른다): 레포 맨 위에서 `.env` 없이 `docker compose --env-file .env.example build`로 이미지 빌드까지만 하고(Bash 제한 시간은 10분, 띄워 보는 확인은 CI가 맡는다), 끝나면 `docker compose --env-file .env.example down --rmi local`로 만든 이미지를 지운다. Docker가 꺼져 있으면 그 사실을 PR에 적고 CI 결과로 넘긴다.
+- 기본 게이트 — Docker(`compose.yaml`·`.env.example`, `backend/`·`ai/`의 `Dockerfile`·`.dockerignore`, `.github/workflows/docker.yml` — 이 워크플로는 아래 줄의 폴더 게이트 대신 이 줄을 따른다): 레포 맨 위에서 `.env` 없이 `docker compose --env-file .env.example build`로 이미지 빌드까지만 하고(Bash 제한 시간은 10분, 띄워 보는 확인은 CI가 맡는다), 끝나면 `docker compose --env-file .env.example down --rmi local backend ai`로 만든 이미지를 지운다(서비스를 적어 mysql은 내리지 않는다). Docker가 꺼져 있으면 그 사실을 PR에 적고 CI 결과로 넘긴다.
 - 기본 게이트 — `.github/workflows/`·`.claude/skills/`·`.gitignore`(어느 폴더든): 워크플로를 고쳤으면 그 워크플로가 보는 폴더의 게이트를, `.claude/skills/`나 `.gitignore`를 고쳤으면 레포 맨 위에서 `bash .claude/skills/issue/tests/run.sh`를 돌린다.
 
 ## Git / 협업 규칙

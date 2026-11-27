@@ -9,8 +9,12 @@ COPY src src
 # Gradle 배포판과 의존성은 빌드 캐시에 두어 다시 빌드할 때 받지 않는다
 RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon bootJar
 
-# 실행 이미지에는 JRE와 jar만 둔다. compose의 healthcheck가 이 이미지에 든 curl을 쓴다
+# 실행 이미지에는 JRE와 jar만 둔다
 FROM eclipse-temurin:21-jre
+# compose의 healthcheck가 curl을 쓴다. 지금은 베이스 이미지에 들어 있지만, 빠져도 healthcheck가 깨지지 않게 직접 설치한다
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
 RUN groupadd --system naengo && useradd --system --gid naengo --no-create-home naengo
 WORKDIR /app
 COPY --from=build /src/build/libs/*.jar app.jar
