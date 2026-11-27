@@ -98,6 +98,7 @@ jobs:
             [ "$uid" != 0 ]
           done
 
+      # .env를 만들기 전 단계에서 실패해도 이 단계가 DB_PASSWORD 오류로 함께 실패하지 않게 .env.example을 준다
       - name: 실패하면 컨테이너 로그 보기
         if: failure()
-        run: docker compose logs --no-color
+        run: docker compose --env-file .env.example logs --no-color
