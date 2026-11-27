@@ -8,8 +8,9 @@ COPY --chmod=755 gradlew ./
 COPY settings.gradle build.gradle ./
 COPY gradle gradle
 COPY src src
-# Gradle 배포판과 의존성은 빌드 캐시에 두어 다시 빌드할 때 받지 않는다
-RUN --mount=type=cache,target=/root/.gradle ./gradlew --no-daemon bootJar
+# Gradle 배포판과 의존성은 빌드 캐시에 두어 다시 빌드할 때 받지 않는다. 컨테이너 사이에서는 Gradle의 캐시 잠금이 풀리지
+# 않아(동시 빌드가 잠금을 기다리다 실패한다) 한 번에 한 빌드만 캐시를 쓰게 한다
+RUN --mount=type=cache,target=/root/.gradle,sharing=locked ./gradlew --no-daemon bootJar
 
 FROM eclipse-temurin:21-jre
 # compose의 healthcheck가 curl을 쓴다. 지금은 베이스 이미지에 들어 있지만, 빠져도 healthcheck가 깨지지 않게 직접 설치한다
