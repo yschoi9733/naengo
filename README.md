@@ -30,14 +30,30 @@
 
 ## 로컬 실행
 
-필요한 것: Java 21, Docker, [uv](https://docs.astral.sh/uv/), Node 22. 세 서버는 끝나지 않고 터미널을 잡고 있으니, 각각 새 터미널을 열어 레포 맨 위에서 시작합니다.
+DB 비밀번호 같은 로컬 값은 레포 맨 위 `.env` 하나에 두고, docker compose와 백엔드(`./gradlew bootRun`)가 같이 읽습니다. 처음 한 번 레포 맨 위에서 만듭니다.
+
+```bash
+[ -f .env ] || cp .env.example .env   # 이미 있으면 덮어쓰지 않는다
+```
+
+> 예전 안내대로 `backend/.env`를 만들어 두었다면, 이제 그 파일을 읽는 곳이 없고, 읽지 않는다는 오류도 나지 않습니다. 레포 맨 위로 옮깁니다(`mv backend/.env .env`, 맨 위 `.env`가 이미 있으면 값을 옮겨 적고 `backend/.env`는 지웁니다).
+
+띄우는 방법은 두 가지입니다. 서버 코드를 고칠 때는 DB만 Docker로 띄우고 서버는 로컬에서 실행합니다. 세 서버를 한 번에 확인할 때는 backend·ai·MySQL을 compose 명령 한 줄로 띄웁니다. 웹 화면(프론트엔드)은 어느 쪽이든 따로 띄웁니다.
+
+### 개발할 때: DB만 Docker로
+
+필요한 것: Docker, Java 21, [uv](https://docs.astral.sh/uv/). 백엔드와 AI 서버는 끝나지 않고 터미널을 잡고 있으니, 각각 새 터미널을 열어 레포 맨 위에서 시작합니다.
+
+MySQL
+
+```bash
+docker compose up -d --wait mysql
+```
 
 백엔드 (http://localhost:8080)
 
 ```bash
 cd backend
-[ -f .env ] || cp .env.example .env   # 처음 한 번(이미 있으면 덮어쓰지 않는다)
-docker compose up -d --wait
 ./gradlew bootRun
 ```
 
@@ -48,7 +64,25 @@ cd ai
 uv run uvicorn naengo_ai.main:app --reload --port 8000
 ```
 
-프론트엔드 (http://localhost:5173, `/api` 요청은 8080으로 넘깁니다)
+### 한 번에 띄울 때: backend·ai·MySQL을 Docker로
+
+필요한 것: Docker. 레포 맨 위에서 칩니다. 이미지를 빌드하고 세 서비스가 준비될 때까지 기다립니다.
+
+```bash
+docker compose up -d --build --wait
+```
+
+백엔드는 http://localhost:8080에 뜹니다. AI 서버는 호스트에 포트를 열지 않고, 백엔드 컨테이너만 compose 안에서 `http://ai:8000`으로 닿습니다.
+
+로컬 `./gradlew bootRun`과 백엔드 컨테이너는 둘 다 8080을 씁니다. 한 번에 띄우기 전에는 bootRun을 끄고, 개발할 때로 돌아갈 때는 서버 컨테이너만 멈춥니다(MySQL은 그대로 둡니다).
+
+```bash
+docker compose stop backend ai
+```
+
+### 프론트엔드 (두 방법 모두)
+
+필요한 것: Node 22. http://localhost:5173에 뜨고, `/api` 요청은 8080으로 넘깁니다.
 
 ```bash
 cd frontend
