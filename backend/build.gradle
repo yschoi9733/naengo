@@ -19,6 +19,7 @@ repositories {
 }
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-flyway'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -39,14 +40,14 @@ dependencies {
 	testAnnotationProcessor 'org.projectlombok:lombok'
 }
 
-// backend/.env는 ./gradlew bootRun 할 때만 읽는다 — 테스트 결과가 개인 .env에 따라 달라지지 않게.
+// 레포 맨 위 .env는 ./gradlew bootRun 할 때만 읽는다 — 테스트 결과가 개인 .env에 따라 달라지지 않게.
 // Spring은 이 파일을 properties 문법으로 읽고 docker compose는 dotenv 문법으로 읽으니, 값은 따옴표·백슬래시·$·줄 끝 주석
 // 없이 KEY=VALUE로만 쓴다(둘이 다르게 읽으면 MySQL과 서버가 서로 다른 비밀번호를 쓴다)
 tasks.named('bootRun') {
-	systemProperty 'spring.config.import', 'optional:file:.env[.properties]'
+	systemProperty 'spring.config.import', 'optional:file:../.env[.properties]'
 }
 
-// 로컬 값은 위 backend/.env로만 받는다. application-local.* 같은 개인 설정 파일은 쓰지 않지만(켜는 프로필도 없다),
+// 로컬 값은 맨 위 .env로만 받는다. application-local.* 같은 개인 설정 파일은 쓰지 않지만(켜는 프로필도 없다),
 // 실수로 src/main/resources에 둬도 배포할 jar에는 들어가지 않게 뺀다
 tasks.named('bootJar') {
 	exclude '**/application-local.*'

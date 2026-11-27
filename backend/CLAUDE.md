@@ -5,7 +5,7 @@
 ## 프로젝트
 
 - **Naengo Backend** — 냉고의 본 서버. 웹이 부르는 API를 모두 맡고, AI 기능은 Python AI 서버(`ai/`)에 내부 HTTP로 넘긴다.
-- Spring Boot 4.1.2 / Java 21 / Gradle 래퍼 / MySQL 8.4. 기본 패키지 `com.naengo`. 명령은 모두 `backend/`에서 친다.
+- Spring Boot 4.1.2 / Java 21 / Gradle 래퍼 / MySQL 8.4. 기본 패키지 `com.naengo`. 명령은 모두 `backend/`에서 친다(compose 명령은 레포 맨 위에서 친다).
 
 ## 아키텍처: 모듈러 모놀리스
 

@@ -1,0 +1,16 @@
+# 빌드 컨텍스트(ai/)에서 뺀다. 경로는 이 폴더 기준이고, **/는 맨 위와 하위 폴더 모두에 걸린다
+
+# 수집한 데이터(공개 레포라 커밋도 하지 않는다) — 이미지에 들어가지 않게 하는 것이 가장 중요하다
+data/
+
+**/.env
+**/.env.*
+**/application-local.*
+.venv/
+**/__pycache__/
+.pytest_cache/
+.ruff_cache/
+dist/
+.idea/
+**/.vscode/
+**/.DS_Store
